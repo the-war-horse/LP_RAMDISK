@@ -1,0 +1,27 @@
+#
+# initialize and configure zram/swap including some tweaks related.
+#
+service svelteon /system/bin/logwrapper /system/bin/sh /init.lge.svelte.sh start
+    class late_start
+    user root
+    group system
+    disabled
+    oneshot
+
+#
+# deinit the zram/swap
+#
+service svelteoff /system/bin/logwrapper /system/bin/sh /init.lge.svelte.sh stop
+    user root
+    group system
+    disabled
+    oneshot
+
+#
+# The below is not only the project "Svelte", but also LGE's feature-added svelte.
+#
+
+# initialize zram/swap, ksm
+on property:sys.boot_completed=1
+    start svelteon
+

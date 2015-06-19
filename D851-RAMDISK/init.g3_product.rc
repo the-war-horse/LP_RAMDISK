@@ -1,0 +1,54 @@
+on init
+    # export external sdcard
+    mkdir /storage/external_SD 0700 root root
+    mkdir /mnt/media_rw 0700 media_rw media_rw
+    mkdir /mnt/media_rw/external_SD 0700 media_rw media_rw
+    export EXTERNAL_ADD_STORAGE /storage/external_SD
+    export SECONDARY_STORAGE /storage/external_SD
+
+# fuse for external_SD
+service fuse_external_SD /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/external_SD /storage/external_SD
+    class late_start
+    disabled
+
+on init
+    setprop ro.ssbd.session /dev/block/platform/msm_sdcc.1/by-name/eksst
+    setprop ro.ssbd.offset 0
+# LGE_CHANGE_S, lg-security@lge.com, 2014-11-20, to support MDFPP
+    setprop ro.sys.sec.version.info "MDF v1.1 Release 2"
+# LGE_CHANGE_S, lg-security@lge.com, 2014-11-20, to support MDFPP
+
+# [ENCRYPTION]For FIPS and  applied only VZW,ATT,SPR and TMUS(NorthAmerica)
+service ufips /system/bin/ufips
+    class core
+    user system
+    group system
+
+#[START][ePDG][changhwan.lee] set ePDG property
+on init
+	setprop persist.data.iwlan.enable true
+	setprop persist.sys.cnd.iwlan 2
+#[END][ePDG][changhwan.lee] set ePDG property
+
+# [LGE_VPN][encryption-vpn@lge.com] Inside Secure VPN Kernel Module install [START]
+service vpnclientpm /system/bin/vpnclientpm3 \
+    -O /data/data/com.ipsec.service/vpnclientpm.txt \
+    -U rmnet0,rmnet_usb0,wlan0,bt-pan,rndis0,p2p0,eth0
+    socket vpnclientpm seqpacket 0666
+# uid dropped to system when capabilities are set
+    class main
+    group system net_admin net_raw
+    disabled
+# [LGE_VPN][encryption-vpn@lge.com] Inside Secure VPN Service & modules permission change [END]
+
+# 2014.11.24 [changik.jeong@lge.com] LGIMS ipsec solution [START]
+service ipsecclient /system/bin/ipsecclient
+    class main
+    group system net_admin net_raw
+    disabled
+
+service ipsecstarter /system/bin/ipsecstarter
+    class main
+    user system
+    group system net_admin net_raw
+# 2014.11.24 [changik.jeong@lge.com] LGIMS ipsec solution [END]

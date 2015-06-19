@@ -1,0 +1,302 @@
+# Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of Code Aurora nor
+#       the names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior written
+#       permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NON-INFRINGEMENT ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+import /init.g3_product.rc
+
+# Bluetooth configuration
+import /init.galbi.bt_vendor.rc
+import /init.galbi.fm_vendor.rc
+
+import /init.lge.svelte.rc
+import init.lge.log.rc
+
+# modem logging (LGODM)
+import /init.lge.modem_log.rc
+
+on fs
+    mount_all fstab.g3
+
+    # Executing tune2fs to reserve some region in /data. (40MB)
+    exec /system/bin/tune2fs -u system -r 10240 /dev/block/platform/msm_sdcc.1/by-name/userdata
+
+    wait /dev/block/platform/msm_sdcc.1/by-name/cache
+    exec /system/bin/e2fsck -y /dev/block/platform/msm_sdcc.1/by-name/cache
+    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/cache /cache nosuid nodev noatime barrier=1 noauto_da_alloc errors=continue
+
+    wait /dev/block/platform/msm_sdcc.1/by-name/persist
+    exec /system/bin/e2fsck -y /dev/block/platform/msm_sdcc.1/by-name/persist
+    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/persist /persist nosuid nodev noatime barrier=1 noauto_da_alloc errors=continue
+
+    wait /dev/block/platform/msm_sdcc.1/by-name/modem
+    mount vfat /dev/block/platform/msm_sdcc.1/by-name/modem /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    # create mount point for LG Specific functions
+    mkdir /sns 0755 system system
+    mkdir /persist-lg 0755 system system
+    mkdir /mpt 0755 system system
+
+    wait /dev/block/platform/msm_sdcc.1/by-name/sns
+    exec /system/bin/e2fsck -y /dev/block/platform/msm_sdcc.1/by-name/sns
+    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/sns /sns nosuid nodev barrier=1 noatime noauto_da_alloc errors=continue
+
+    wait /dev/block/platform/msm_sdcc.1/by-name/drm
+    exec /system/bin/e2fsck -y /dev/block/platform/msm_sdcc.1/by-name/drm
+    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/drm /persist-lg nosuid nodev barrier=1 noatime noauto_da_alloc errors=continue
+
+    wait /dev/block/platform/msm_sdcc.1/by-name/mpt
+    exec /system/bin/e2fsck -y /dev/block/platform/msm_sdcc.1/by-name/mpt
+    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/mpt /mpt nodev nosuid barrier=1 noatime noauto_da_alloc errors=continue
+
+    mkdir /data/screencap/ 0744 system system
+    mount -t ramfs none /data/screencap -o maxsize=10M
+
+    restorecon_recursive /sns
+    restorecon_recursive /persist-lg
+    restorecon_recursive /mpt
+    restorecon_check_recursive /sns
+    restorecon_check_recursive /persist-lg
+    restorecon_check_recursive /mpt
+    restorecon_recursive /persist
+
+on post-fs-data
+    chown system system /mpt
+    chmod 0775 /mpt
+
+on early-boot
+    # disable lmk_fast_run
+    write /sys/module/lowmemorykiller/parameters/lmk_fast_run 0
+
+on boot
+    # enable exfat feature
+    insmod /system/lib/modules/texfat.ko
+
+    # START touch_driver
+	chown system system /sys/devices/virtual/input/lge_touch/lpwg_data
+	chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_data
+	chown system system /sys/devices/virtual/input/lge_touch/lpwg_notify
+	chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_notify
+	chown system system /sys/devices/virtual/input/lge_touch/lpwg_test_info
+	chmod 644 /sys/devices/virtual/input/lge_touch/lpwg_test_info
+	chown system system /sys/devices/virtual/input/lge_touch/lpwg_test_ctrl
+	chmod 644 /sys/devices/virtual/input/lge_touch/lpwg_test_ctrl
+	chown system system /sys/devices/virtual/input/lge_touch/touch_wake_up_test
+	chmod 664 /sys/devices/virtual/input/lge_touch/touch_wake_up_test
+	chown system lgkeyguard /sys/devices/virtual/input/lge_touch/keyguard
+	chmod 664 /sys/devices/virtual/input/lge_touch/keyguard
+	chown system system /sys/devices/virtual/input/lge_touch/incoming_call
+	chown system system /sys/devices/virtual/input/lge_touch/ime_status
+	chown system system /sys/devices/virtual/input/lge_touch/ts_noise_log_enable
+	chmod 664 /sys/devices/virtual/input/lge_touch/ts_noise_log_enable
+	chown system system /sys/devices/virtual/input/lge_touch/ts_noise
+	chmod 664 /sys/devices/virtual/input/lge_touch/ts_noise
+	chmod 664 /sys/devices/virtual/input/lge_touch/quick_cover_status
+	chown system system /sys/devices/virtual/input/lge_touch/quick_cover_status
+    # END touch_knock_on
+
+    # Dynamic LCD refresh rate PM
+    chown system system /sys/class/devfreq/g3-display.0/polling_interval
+    chmod 664 /sys/class/devfreq/g3-display.0/polling_interval
+    chown system system /sys/class/devfreq/g3-display.0/cur_freq
+    chmod 664 /sys/class/devfreq/g3-display.0/cur_freq
+    chown system system /sys/class/graphics/fb0/dynamic_fps
+    chmod 664 /sys/class/graphics/fb0/dynamic_fps
+
+    chown system system /sys/class/graphics/fb0/mdp/vfps_trigger
+    chmod 644 /sys/class/graphics/fb0/mdp/vfps_trigger
+    chown system system /sys/class/graphics/fb0/mdp/vfps_boost
+    chmod 644 /sys/class/graphics/fb0/mdp/vfps_boost
+    chown system system /sys/class/graphics/fb0/mdp/vfps_sts
+    chmod 644 /sys/class/graphics/fb0/mdp/vfps_sts
+
+    lge_chcon_recursive /data/property u:object_r:property_data_file:s0
+    lge_chcon_recursive /data/security u:object_r:security_file:s0
+    start chcon_keystore
+
+on property:sys.boot_completed=1
+    write /sys/class/devfreq/g3-display.0/polling_interval 1000
+
+# HDCP 2.x for Wi-Fi Display
+  mkdir /persist-lg/wfd 0770 system system
+# 2012.08.24 real-wifi@lge.com[wo0gi] TestMode Daemon for broadcom driver [START]
+service diagd /system/bin/diagd
+    class late_start
+    user root
+    group radio system
+    disabled
+    oneshot
+    socket lsock_diagd stream 666
+
+on property:wifi_ftm.diagd_start=1
+    start diagd
+
+on property:wifi_ftm.diagd_start=0
+    stop diagd
+# 2012.08.24 real-wifi@lge.com[wo0gi] TestMode Daemon for broadcom driver [END]
+
+# 2013.05.13 real-wifi@lge.com[woOgi] TestMode Daemon for QCT driver
+service ftm_ptt /system/bin/ftm_ptt -d
+    class late_start
+    user root
+    group radio
+    disabled
+    oneshot
+
+on property:hw.ftm_ptt_start=1
+    start ftm_ptt
+
+on property:hw.ftm_ptt_start=0
+    stop ftm_ptt
+# 2013.05.13 real-wifi@lge.com[woOgi] TestMode Daemon for QCT driver
+# [BEGIN][LGE_WIFI][QCT][neo-wifi@lge.com] set SSR3 and rivadump enable depends on buildtype
+on property:ro.build.type=user
+    setprop persist.sys.ssr.restart_level_w 3
+
+on property:ro.build.type=userdebug
+    setprop persist.sys.ssr.restart_level_w 3
+#    setprop persist.service.rivadump.enable 1
+# [END][LGE_WIFI][QCT][neo-wifi@lge.com] set SSR3 and rivadump enable depends on buildtype
+
+# [BEGIN][LGE_WIFI][QCT][neo-wifi@lge.com] add riva_ramdump service
+on property:persist.sys.ssr.restart_level_w=*
+     start wifi_ssr_setting
+#    exec /system/bin/sh /system/etc/init.zetaw.ssr.wifi.sh ${persist.sys.ssr.restart_level_w}
+
+service wifi_ssr_setting /system/bin/sh /system/etc/init.g3.ssr.wifi.sh
+    class late_start
+    user root
+    group system
+    disabled
+    oneshot
+
+on property:persist.service.rivadump.enable=1
+    write /sys/module/pil_pronto/parameters/enable_pronto_ramdump 1
+    start riva_ramdump
+
+on property:persist.service.rivadump.enable=0
+    write /sys/module/pil_pronto/parameters/enable_pronto_ramdump 0
+    stop riva_ramdump
+
+service riva_ramdump /system/bin/riva_ramdump
+    class late_start
+    user root
+    group system
+    disabled
+# [END][LGE_WIFI][QCT][neo-wifi@lge.com] add riva_ramdump service
+
+# Workaround for copying the updated firmware
+    rm /data/misc/wifi/WCNSS_qcom_cfg.ini
+    rm /data/misc/wifi/WCNSS_qcom_wlan_nv.bin
+
+#[START][LGE_WIFI][CT][hayun.kim@lge.com] : [SPEC] PPPOE Feature
+service pppoe_extd /system/bin/pppoe_extd
+    user root
+    group system radio
+    disabled
+    oneshot
+
+service dhcp6cDNS_wlan0 /system/bin/dhcp6c -c "/etc/wide-dhcpv6/dhcp6cDNS.conf" -Df wlan0
+    disabled
+    oneshot
+
+service dhcp6c_wlan0 /system/bin/dhcp6c -c "/etc/wide-dhcpv6/dhcp6c.conf" -Df wlan0
+    disabled
+    oneshot
+#[END][LGE_WIFI][CT][hayun.kim@lge.com] : [SPEC] PPPOE Feature
+
+#// LGE_UPDATE_S DMS_SYSTEM_GOTA dms-fota@lge.com 2014/10/06
+service recovery_write /sbin/write_recovery
+    class main
+    oneshot
+#// LGE_UPDATE_S DMS_SYSTEM_GOTA dms-fota@lge.com 2014/10/06
+service atd /system/bin/atd /dev/ttyGS0 /dev/smd0
+    socket atd stream 0660 system inet
+    disabled
+
+service gbmonitor /system/bin/gbmonitor
+    class main
+    socket gbm-client stream 660 system system
+    user system
+    group system
+
+#LGE_CHANGE_S, restart qcamerasvr when restarting mediaserver and servicemanager, yousung.kang@lge.com
+on property:init.svc.media=restarting
+    restart qcamerasvr
+on property:init.svc.servicemanager=restarting
+    restart qcamerasvr
+#LGE_CHANGE_E, restart qcamerasvr when restarting mediaserver and servicemanager, yousung.kang@lge.com
+
+on property:ro.baseband="msm"
+    start atd
+
+service bnrd /system/bin/bnrd
+    class main
+    socket bnrd stream 660 root system
+    user root
+    group system radio sdcard_rw
+
+service service-crash /system/bin/sh /init.g3.crash.sh
+    class main
+    disabled
+    oneshot
+
+on property:persist.service.crash.enable=1
+    stop service-crash
+    start service-crash
+
+on property:persist.service.crash.enable=0
+    stop service-crash
+    start service-crash
+
+# Begin Immersion changes
+service immvibed /system/bin/immvibed
+    class main
+    user shell
+    group shell system
+    oneshot
+# End Immersion changes
+
+service rctd /system/bin/rctd
+	class late_start
+	user root
+	group root
+
+#Customize booting resources
+service runtime_boot_res /system/vendor/bin/runtime_boot_res.sh
+    disabled
+    oneshot
+
+service chcon_keystore /system/bin/sh /system/etc/init.g3_chcon_keystore.sh
+    disabled
+    oneshot
+    seclabel u:r:keystore:s0
+
+on property:ro.build.sbp=1
+    start runtime_boot_res
+
+on boot
+    mkdir /data/nfc 0770 nfc nfc
+    mkdir /data/nfc/param 0770 nfc nfc

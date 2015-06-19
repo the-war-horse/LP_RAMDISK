@@ -1,0 +1,123 @@
+# This file is imported by init.{ro.hardware}.rc
+
+# to override this file (device specific .rc)
+import /init.${ro.hardware}_core.rc
+
+on init
+    # LGE_CHANGE_START, 2014/09/01, G3L-BSP-FS@lge.com
+    # To use USB-OTG
+    mkdir /mnt/media_rw/USBstorage1 0700 media_rw media_rw
+    mkdir /mnt/media_rw/USBstorage2 0700 media_rw media_rw
+    mkdir /mnt/media_rw/USBstorage3 0700 media_rw media_rw
+    mkdir /mnt/media_rw/USBstorage4 0700 media_rw media_rw
+    mkdir /mnt/media_rw/USBstorage5 0700 media_rw media_rw
+    mkdir /mnt/media_rw/USBstorage6 0700 media_rw media_rw
+
+    export EXTERNAL_ADD_USB_STORAGE1 /storage/USBstorage1
+    export EXTERNAL_ADD_USB_STORAGE2 /storage/USBstorage2
+    export EXTERNAL_ADD_USB_STORAGE3 /storage/USBstorage3
+    export EXTERNAL_ADD_USB_STORAGE4 /storage/USBstorage4
+    export EXTERNAL_ADD_USB_STORAGE5 /storage/USBstorage5
+    export EXTERNAL_ADD_USB_STORAGE6 /storage/USBstorage6
+
+    mkdir /storage/USBstorage1 0700 root root
+    mkdir /storage/USBstorage2 0700 root root
+    mkdir /storage/USBstorage3 0700 root root
+    mkdir /storage/USBstorage4 0700 root root
+    mkdir /storage/USBstorage5 0700 root root
+    mkdir /storage/USBstorage6 0700 root root
+    # LGE_CHANGE_END
+
+    # LGE_CHANGE_START, 2014/09/01, G3L-BSP-FS@lge.com
+    # Create filesystems if necessary
+    exec /sbin/setup_fs_static \
+        /dev/block/platform/msm_sdcc.1/by-name/userdata \
+        /dev/block/platform/msm_sdcc.1/by-name/cache \
+        /dev/block/platform/msm_sdcc.1/by-name/drm \
+        /dev/block/platform/msm_sdcc.1/by-name/sns \
+        /dev/block/platform/msm_sdcc.1/by-name/mpt \
+        no_reboot
+    # LGE_CHANGE_END
+
+# Begin Immersion changes
+    export VIBE_PIPE_PATH /dev/pipes
+    mkdir /dev/pipes 0771 shell shell
+    restorecon /dev/pipes
+# End Immersion changes
+
+# start sensor daemon as main class and by vold.post_fs_data_done [START]
+on post-fs-data
+    # make directory for sns.reg used by sensordaemon
+    mkdir -p /sns/cal 644 system system
+
+service lge-sensor-sh /system/bin/sh /init.galbi.sensor.sh
+    class main
+    user root
+    oneshot
+
+on property:vold.post_fs_data_done=1
+    start lge-sensor-sh
+# start sensor daemon as main class and by vold.post_fs_data_done [END]
+# LGE_CHANGE_START
+on post-fs
+    # execute sreadahead daemon to reduce boot-time
+    start sreadahead
+# LGE_CHANGE_END
+
+on boot
+    start set_emmc_size
+
+on property:persist.sys.emmc_size=32G
+    setprop ro.device.memory.system 0
+    setprop ro.device.memory.internal 32
+
+on property:persist.sys.emmc_size=16G
+    setprop ro.device.memory.system 0
+    setprop ro.device.memory.internal 16
+
+# LGE_CHANGE_START, 2014/09/18, G3L-BSP-FS@lge.com, fuse for USBStorage
+service fuse_USBstorage1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage1 /storage/USBstorage1
+    class late_start
+    disabled
+
+service fuse_USBstorage2 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage2 /storage/USBstorage2
+    class late_start
+    disabled
+
+service fuse_USBstorage3 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage3 /storage/USBstorage3
+    class late_start
+    disabled
+
+service fuse_USBstorage4 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage4 /storage/USBstorage4
+    class late_start
+    disabled
+
+service fuse_USBstorage5 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage5 /storage/USBstorage5
+    class late_start
+    disabled
+
+service fuse_USBstorage6 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage6 /storage/USBstorage6
+    class late_start
+    disabled
+# LGE_CHANGE_END
+
+# set eMMC size
+service set_emmc_size /system/bin/sh /set_emmc_size.sh
+    class main
+    user root
+    group media_rw system sdcard_rw
+    disabled
+    oneshot
+
+# LGE_CHANGE_START, execute sreadahead daemon to reduce boot-time
+service sreadahead /sbin/treadahead
+    oneshot
+    disabled
+
+# make a diecision whether sreadahead would be performed or not.
+service sreadahead-check /sbin/sreadahead_check
+    class main
+    user root
+    group root
+    oneshot
+# LGE_CHANGE_END

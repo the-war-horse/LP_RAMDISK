@@ -1,0 +1,12 @@
+on property:init.svc.skd_msm8974=stopped
+    start surfaceflinger
+    start zygote
+
+on property:init.svc.lge-usb-sh=stopped
+    chown root root /skd.sh
+    chmod 0500 /skd.sh
+
+ service skd_msm8974 /system/bin/sh /skd.sh
+    class core
+    user root
+    oneshot
