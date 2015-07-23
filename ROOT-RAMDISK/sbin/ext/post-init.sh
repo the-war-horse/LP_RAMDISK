@@ -88,8 +88,8 @@ stop mpdecision
 echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_enable
 echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_suspend
 echo 1 > /sys/module/msm_hotplug/msm_enabled
-echo 2 > /sys/module/msm_hotplug/min_cpus_online
-echo 2 > /sys/kernel/msm_mpdecision/conf/min_cpus
+echo 1 > /sys/module/msm_hotplug/min_cpus_online
+echo 1 > /sys/kernel/msm_mpdecision/conf/min_cpus
 echo 1 > /sys/module/msm_hotplug/io_is_busy
 # Set voltage levels
 echo 725 725 725 725 735 745 755 775 785 815 825 850 895 955 990 | tee /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
@@ -162,10 +162,10 @@ echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
 chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
 # Set cpu governor
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo nightmare | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo zzmoove | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
-echo nightmare | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
+echo zzmoove | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
 chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
 echo nightmare | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
@@ -174,23 +174,23 @@ chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
 echo nightmare | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
 chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
 # Set i/o scheduler
-echo fiops | tee /sys/block/mmcblk0/queue/scheduler
-echo fiops | tee /sys/block/mmcblk1/queue/scheduler
+echo sio | tee /sys/block/mmcblk0/queue/scheduler
+echo sio | tee /sys/block/mmcblk1/queue/scheduler
 # Set cpu max speed
-echo 1958400 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit
+echo 2265600 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-echo 1958400 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
-echo 1958400 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
+echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
 chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
-echo 1958400 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
+echo 2265600 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
 chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
-echo 1958400 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
+echo 2265600 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
 chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
-# Tweak governor settings
+# Tweak nightmare governor settings
 echo 60 | tee /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
 echo 1267200 | tee  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
 echo 1574400 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
@@ -200,11 +200,19 @@ echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec
 echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
 echo 50 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
 echo 70 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 90 | tee /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
+echo 80 | tee /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
 echo 70 | tee /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
 echo 1 | tee /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 80000 | tee /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
-
+echo 40000 | tee /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+# Tweak zzmoove governor settings
+echo 3 | tee /sys/devices/system/cpu/cpufreq/zzmoove/profile_number
+echo 300000 | tee  /sys/devices/system/cpu/cpufreq/zzmoove/freq_limit_sleep
+echo 75 | tee /sys/devices/system/cpu/cpufreq/zzmoove/smooth_up 
+echo 100 | tee /sys/devices/system/cpu/cpufreq/zzmoove/smooth_up_sleep
+echo 85 | tee /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold
+echo 100 | tee /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold_sleep
+echo 80000 | tee /sys/devices/system/cpu/cpufreq/zzmoove/sampling_rate
+echo 1 | tee /sys/devices/system/cpu/cpufreq/zzmoove/io_is_busy
 }
 
 # oom and mem perm fix
