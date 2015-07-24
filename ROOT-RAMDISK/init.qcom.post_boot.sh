@@ -31,39 +31,27 @@ battery_present=`cat /sys/class/power_supply/battery/present`
 case "$target" in
     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627a"  | "msm7627_surf" | \
     "qsd8250_surf" | "qsd8250_ffa" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion" | "qsd8650a_st1x")
-        echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-        echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-        echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-        echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-        echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
         ;;
 esac
 
 case "$target" in
     "msm7201a_ffa" | "msm7201a_surf")
-        echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo 500000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         ;;
 esac
 
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
-        echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo 75000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         echo 1 > /sys/module/pm2/parameters/idle_sleep_mode
         ;;
 esac
 
 case "$target" in
     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627_surf" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion" | "msm7627a" )
-        echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 245760 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         ;;
 esac
 
@@ -82,23 +70,14 @@ case "$target" in
         echo 1 > /sys/module/pm_8x60/modes/cpu1/power_collapse/idle_enabled
         echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled
         echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo "nightmare" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
-        echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo "ondemand" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+        echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+        echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+        echo 4 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+        echo 384000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 384000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         chown -h system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
@@ -134,30 +113,27 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
-        echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo "nightmare" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-        echo "nightmare" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-        echo "nightmare" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
-        chown -h system /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
-        chown -h system /sys/devices/system/cpu/cpufreq/nightmare/sampling_down_factor
-        chown -h system /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-        echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo "ondemand" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+        echo "ondemand" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+        echo "ondemand" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+        echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+        echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+        echo 4 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+        echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential
+        echo 70 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
+        echo 3 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
+        echo 918000 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
+        echo 1026000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
+        echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
+        chown -h system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+        chown -h system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+        chown -h system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+        echo 384000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 384000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+        echo 384000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        echo 384000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         chown -h system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
@@ -166,9 +142,7 @@ echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
         chown -h system /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
         chown -h system /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-        echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
-        echo Y > /sys/module/msm_thermal/parameters/enabled
-        echo 0 > /sys/module/msm_thermal/core_control/enabled
+        echo 1 > /sys/module/msm_thermal/core_control/enabled
         chown -h root.system /sys/devices/system/cpu/mfreq
         chmod -h 220 /sys/devices/system/cpu/mfreq
         chown -h root.system /sys/devices/system/cpu/cpu1/online
@@ -202,43 +176,22 @@ echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
         echo 500000 > /sys/module/msm_dcvs/cores/cpu3/em_win_size_max_us
         echo 0 > /sys/module/msm_dcvs/cores/cpu3/slack_mode_dynamic
         echo 1000000 > /sys/module/msm_dcvs/cores/cpu3/disable_pc_threshold
-        # Set gpu settings
-echo 462400000 > /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/max_gpuclk
-echo 462400000 > /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/max_freq
-echo 10 > /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/polling_interval
-echo msm-adreno-tz > /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor
-echo 1 > /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate
-echo 4000 > /sys/module/simple_gpu_algorithm/parameters/simple_ramp_threshold
-echo 6 > /sys/module/simple_gpu_algorithm/parameters/simple_laziness
-# set cpu boost settings
-echo 0 > /sys/module/cpu_boost/parameters/boost_ms
-echo 0 > /sys/module/cpu_boost/parameters/input_boost_ms
-echo 1036800 > /sys/module/cpu_boost/parameters/sync_threshold
-echo 1036800 > /sys/module/cpu_boost/parameters/input_boost_freq
-# Set screen levels
-echo 250 252 256 > /sys/devices/platform/kcal_ctrl.0/kcal
-echo 1 > /sys/devices/platform/kcal_ctrl.0/kcal_enable
-echo 248 > /sys/devices/platform/kcal_ctrl.0/kcal_val
-echo 253 > /sys/devices/platform/kcal_ctrl.0/kcal_cont
-# Set voltage levels
-echo 725 725 725 725 735 745 755 775 785 815 825 850 895 955 990 > /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
-# Msc cpu tweaks
-echo 0 > /sys/devices/system/cpu/sched_mc_power_savings
-echo 1 > /sys/kernel/power_suspend/power_suspend_mode
-# Set zram size
-swapoff /dev/block/zram0
-echo 1 > /sys/block/zram0/reset
-echo 314572800 > /sys/block/zram0/disksize
-mkswap /dev/block/zram0
-swapon /dev/block/zram0
         # set DCVS parameters for GPU
         echo 20000 > /sys/module/msm_dcvs/cores/gpu0/slack_time_max_us
         echo 20000 > /sys/module/msm_dcvs/cores/gpu0/slack_time_min_us
         echo 0 > /sys/module/msm_dcvs/cores/gpu0/slack_mode_dynamic
         # set msm_mpdecision parameters
-        echo 0 > /sys/module/msm_hotplug/msm_enabled
-echo 0 > /sys/kernel/msm_mpdecision/conf/enabled
-stop mpdecision
+        echo 45000 > /sys/module/msm_mpdecision/slack_time_max_us
+        echo 15000 > /sys/module/msm_mpdecision/slack_time_min_us
+        echo 100000 > /sys/module/msm_mpdecision/em_win_size_min_us
+        echo 1000000 > /sys/module/msm_mpdecision/em_win_size_max_us
+        echo 3 > /sys/module/msm_mpdecision/online_util_pct_min
+        echo 25 > /sys/module/msm_mpdecision/online_util_pct_max
+        echo 97 > /sys/module/msm_mpdecision/em_max_util_pct
+        echo 2 > /sys/module/msm_mpdecision/rq_avg_poll_ms
+        echo 10 > /sys/module/msm_mpdecision/mp_em_rounding_point_min
+        echo 85 > /sys/module/msm_mpdecision/mp_em_rounding_point_max
+        echo 50 > /sys/module/msm_mpdecision/iowait_threshold_pct
         #set permissions for the nodes needed by display on/off hook
         chown -h system /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
         chown -h system /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
@@ -302,14 +255,14 @@ case "$target" in
         echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+        # echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu0/retention/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu1/retention/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu2/retention/idle_enabled
@@ -342,59 +295,55 @@ case "$target" in
                 do
                     echo "cpubw_hwmon" > $devfreq_gov
                 done
-                echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-                echo "nightmare" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-                echo "nightmare" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-                echo "nightmare" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-                echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+                echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+                echo "interactive" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+                echo "interactive" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+                echo "interactive" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+                #echo "20000 1400000:40000 1700000:20000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+                echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+                echo 1190400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+                echo 1 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+                #echo "85 1500000:90 1800000:70" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+                echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+                echo 20 > /sys/module/cpu_boost/parameters/boost_ms
+                #echo 1728000 > /sys/module/cpu_boost/parameters/sync_threshold
+                #echo 100000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
+                echo 1497600 > /sys/module/cpu_boost/parameters/input_boost_freq
+                echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
 
-                #Set LGE nightmare-Grid parameters for G3 models
-              echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+                #Set LGE Interactive-Grid parameters for G3 models
+                echo "20000 1100000:40000 1500000:20000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+                echo "85 1500000:90" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+                echo 960000 > /sys/module/cpu_boost/parameters/sync_threshold
+                echo 0 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
+
+                echo 1 > /sys/devices/system/cpu/cpufreq/interactive/is_grid
+                echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/above_optimal_max_freq_delay
+                echo 960000 > /sys/devices/system/cpu/cpufreq/interactive/optimal_max_freq
+                echo 7 > /sys/devices/system/cpu/cpufreq/interactive/middle_grid_step
+                echo 37 > /sys/devices/system/cpu/cpufreq/interactive/middle_grid_load
+                echo 14 > /sys/devices/system/cpu/cpufreq/interactive/high_grid_step
+                echo 46 > /sys/devices/system/cpu/cpufreq/interactive/high_grid_load
+                echo 1000 > /sys/class/devfreq/g3-display.0/polling_interval
 
                 setprop ro.qualcomm.perf.cores_online 2
             ;;
             *)
-                echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-                echo "nightmare" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-                echo "nightmare" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-                echo "nightmare" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-                echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+                echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+                echo "ondemand" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+                echo "ondemand" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+                echo "ondemand" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+                echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+                echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+                echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+                echo 2 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+                echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential
+                echo 70 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
+                echo 3 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
+                echo 960000 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
+                echo 960000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
+                echo 1190400 > /sys/devices/system/cpu/cpufreq/ondemand/input_boost
+                echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
             ;;
         esac
         echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
@@ -435,20 +384,18 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
-        echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+        echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+        echo 2 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+        echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential
+        echo 70 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
+        echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
+        echo 787200 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
+        echo 300000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
+        echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
+        echo 787200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         chown -h root.system /sys/devices/system/cpu/cpu1/online
@@ -479,20 +426,18 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
-        echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+        echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+        echo 2 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+        echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential
+        echo 70 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
+        echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
+        echo 787200 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
+        echo 300000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
+        echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
+        echo 787200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         setprop ro.qualcomm.perf.min_freq 7
         echo 1 > /sys/kernel/mm/ksm/deferred_timer
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
@@ -530,23 +475,14 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
-        echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo "nightmare" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-        echo "nightmare" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-        echo "nightmare" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo "ondemand" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+        echo "ondemand" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+        echo "ondemand" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+        echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+        echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+        echo 2 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
         echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
         echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
@@ -568,37 +504,13 @@ esac
 
 case "$target" in
     "msm7627_ffa" | "msm7627_surf" | "msm7627_6x")
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo 25000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         ;;
 esac
 
 case "$target" in
     "qsd8250_surf" | "qsd8250_ffa" | "qsd8650a_st1x")
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         ;;
 esac
 
@@ -608,9 +520,9 @@ case "$target" in
     ;;
 esac
 
-chown -h system /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
-chown -h system /sys/devices/system/cpu/cpufreq/nightmare/sampling_down_factor
-chown -h system /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
+chown -h system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+chown -h system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+chown -h system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
 
 emmc_boot=`getprop ro.boot.emmc`
 case "$emmc_boot"
@@ -640,20 +552,20 @@ case "$target" in
         if [ "1" == "$battery_present" ]; then
             start mpdecision
         fi
-        echo 2048 > /sys/block/mmcblk0/bdi/read_ahead_kb
+        echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
         ;;
     "apq8084")
         rm /data/system/default_values
         start mpdecision
-        echo 2048 > /sys/block/mmcblk0/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sda/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sdb/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sdc/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sdd/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sde/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sdf/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sdg/bdi/read_ahead_kb
-        echo 2048 > /sys/block/sdh/bdi/read_ahead_kb
+        echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
+        echo 512 > /sys/block/sda/bdi/read_ahead_kb
+        echo 512 > /sys/block/sdb/bdi/read_ahead_kb
+        echo 512 > /sys/block/sdc/bdi/read_ahead_kb
+        echo 512 > /sys/block/sdd/bdi/read_ahead_kb
+        echo 512 > /sys/block/sde/bdi/read_ahead_kb
+        echo 512 > /sys/block/sdf/bdi/read_ahead_kb
+        echo 512 > /sys/block/sdg/bdi/read_ahead_kb
+        echo 512 > /sys/block/sdh/bdi/read_ahead_kb
         ;;
     "msm7627a")
         if [ -f /sys/devices/soc0/soc_id ]; then
@@ -681,67 +593,15 @@ case "$target" in
         echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/suspend_enabled
         #IdlePC:
         echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/idle_enabled
-        echo 60 > /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 >  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 > /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 > /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 70 > /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 85 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 75 > /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 > /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+        echo 25000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         ;;
 esac
 
 # Change adj level and min_free_kbytes setting for lowmemory killer to kick in
 case "$target" in
     "msm7627a")
-        echo 4096,8192,16384,32768,49152,65536 > /sys/module/lowmemorykiller/parameters/adj
-        echo 90 > /proc/sys/vm/dirty_ratio
-        echo 80 > /proc/sys/vm/dirty_background_ratio
-        echo 1 > /proc/sys/vm/oom_kill_allocating_task
-        echo 1 > /proc/sys/vm/overcommit_memory
-        echo 3 > /proc/sys/vm/page-cluster
-        echo 3 > /proc/sys/vm/drop_caches
-        echo 4096 > /proc/sys/vm/min_free_kbytes
-        echo 0 > /proc/sys/vm/panic_on_oom
-        echo 1000 > /proc/sys/vm/dirty_expire_centisecs
-        echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
-        echo 60 > /proc/sys/vm/swappiness
-        echo 10 > /proc/sys/vm/vfs_cache_pressure
-        echo 4 > /proc/sys/vm/min_free_order_shift
-        echo 0 > /proc/sys/vm/laptop_mode
-        echo 0 > /proc/sys/vm/block_dump
-
-        echo 1053696 > /proc/sys/fs/nr_open
-echo 32000 > /proc/sys/fs/inotify/max_queued_events
-echo 256 > /proc/sys/fs/inotify/max_user_instances
-echo 10240 > /proc/sys/fs/inotify/max_user_watches
-echo 10 > /proc/sys/fs/lease-break-time
-echo 165164 > /proc/sys/fs/file-max
-echo 525810 > /proc/sys/kernel/threads-max
-echo 256 > /proc/sys/kernel/random/write_wakeup_threshold
-echo 128 > /proc/sys/kernel/random/read_wakeup_threshold
-echo 1 > /proc/sys/kernel/sched_compat_yield
-echo 5 > /proc/sys/kernel/panic
-echo 1 > /proc/sys/kernel/panic_on_oops
-echo 2048 > /proc/sys/kernel/msgmni
-echo 64000 > /proc/sys/kernel/msgmax
-echo 4096 > /proc/sys/kernel/shmmni
-echo 2097152 > /proc/sys/kernel/shmall
-echo 268435456 > /proc/sys/kernel/shmmax
-echo 500 512000 64 2048 > /proc/sys/kernel/sem
-echo 24189 > /proc/sys/kernel/sched_features
-echo 30 > /proc/sys/kernel/hung_task_timeout_secs
-echo 18000000 > /proc/sys/kernel/sched_latency_ns
-echo 1500000 > /proc/sys/kernel/sched_min_granularity_ns
-echo 3000000 > /proc/sys/kernel/sched_wakeup_granularity_ns
-echo 256000 > /proc/sys/kernel/sched_shares_ratelimit
-echo 0 > /proc/sys/kernel/sched_child_runs_first
+        echo 0,1,2,4,9,12 > /sys/module/lowmemorykiller/parameters/adj
+        echo 5120 > /proc/sys/vm/min_free_kbytes
         ;;
 esac
 
@@ -763,48 +623,8 @@ fi
 case "$target" in
     "msm8660")
         start qosmgrd
-        echo 4096,8192,16384,32768,49152,65536 > /sys/module/lowmemorykiller/parameters/adj
-        echo 90 > /proc/sys/vm/dirty_ratio
-        echo 80 > /proc/sys/vm/dirty_background_ratio
-        echo 1 > /proc/sys/vm/oom_kill_allocating_task
-        echo 1 > /proc/sys/vm/overcommit_memory
-        echo 3 > /proc/sys/vm/page-cluster
-        echo 3 > /proc/sys/vm/drop_caches
-        echo 4096 > /proc/sys/vm/min_free_kbytes
-        echo 0 > /proc/sys/vm/panic_on_oom
-        echo 1000 > /proc/sys/vm/dirty_expire_centisecs
-        echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
-        echo 60 > /proc/sys/vm/swappiness
-        echo 10 > /proc/sys/vm/vfs_cache_pressure
-        echo 4 > /proc/sys/vm/min_free_order_shift
-        echo 0 > /proc/sys/vm/laptop_mode
-        echo 0 > /proc/sys/vm/block_dump
-
-        echo 1053696 > /proc/sys/fs/nr_open
-echo 32000 > /proc/sys/fs/inotify/max_queued_events
-echo 256 > /proc/sys/fs/inotify/max_user_instances
-echo 10240 > /proc/sys/fs/inotify/max_user_watches
-echo 10 > /proc/sys/fs/lease-break-time
-echo 165164 > /proc/sys/fs/file-max
-echo 525810 > /proc/sys/kernel/threads-max
-echo 256 > /proc/sys/kernel/random/write_wakeup_threshold
-echo 128 > /proc/sys/kernel/random/read_wakeup_threshold
-echo 1 > /proc/sys/kernel/sched_compat_yield
-echo 5 > /proc/sys/kernel/panic
-echo 1 > /proc/sys/kernel/panic_on_oops
-echo 2048 > /proc/sys/kernel/msgmni
-echo 64000 > /proc/sys/kernel/msgmax
-echo 4096 > /proc/sys/kernel/shmmni
-echo 2097152 > /proc/sys/kernel/shmall
-echo 268435456 > /proc/sys/kernel/shmmax
-echo 500 512000 64 2048 > /proc/sys/kernel/sem
-echo 24189 > /proc/sys/kernel/sched_features
-echo 30 > /proc/sys/kernel/hung_task_timeout_secs
-echo 18000000 > /proc/sys/kernel/sched_latency_ns
-echo 1500000 > /proc/sys/kernel/sched_min_granularity_ns
-echo 3000000 > /proc/sys/kernel/sched_wakeup_granularity_ns
-echo 256000 > /proc/sys/kernel/sched_shares_ratelimit
-echo 0 > /proc/sys/kernel/sched_child_runs_first
+        echo 0,1,2,4,9,12 > /sys/module/lowmemorykiller/parameters/adj
+        echo 5120 > /proc/sys/vm/min_free_kbytes
         ;;
 esac
 
