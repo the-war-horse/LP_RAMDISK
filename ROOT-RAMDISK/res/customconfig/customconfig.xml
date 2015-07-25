@@ -276,6 +276,12 @@
 			<spinnerItem name="1267200" value="1267200"/> 
 			<spinnerItem name="1190400" value="1190400"/> 
 			<spinnerItem name="1036800" value="1036800"/> 
+			<spinnerItem name="960000" value="960000"/> 
+			<spinnerItem name="883200" value="883200"/> 
+			<spinnerItem name="729600" value="729600"/> 
+			<spinnerItem name="652800" value="652800"/> 
+			<spinnerItem name="422400" value="422400"/> 
+			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
 
 		<button description="To access CPU LIVE Stats from my kernel PUSH the BUTTON!" name="CPU LIVE Stats" action="push-actions/thermal_control" label="Switch to Synapse Controls"/>
