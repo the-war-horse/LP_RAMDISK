@@ -18,15 +18,15 @@ OPEN_RW()
 }
 OPEN_RW;
 
-selinux_status=$(grep -c "selinux=1" /proc/cmdline);
-if [ "$selinux_status" -eq "1" ]; then
-	restorecon -RF /system
-	if [ -e /system/bin/app_process32_xposed ]; then
-		chcon u:object_r:zygote_exec:s0 /system/bin/app_process32_xposed
-	fi;
-	umount /firmware;
-	mount -t vfat -o ro,context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337 /dev/block/platform/msm_sdcc.1/by-name/modem /firmware
-fi;
+#selinux_status=$(grep -c "selinux=1" /proc/cmdline);
+#if [ "$selinux_status" -eq "1" ]; then
+#	restorecon -RF /system
+#	if [ -e /system/bin/app_process32_xposed ]; then
+#		chcon u:object_r:zygote_exec:s0 /system/bin/app_process32_xposed
+#	fi;
+#	umount /firmware;
+#	mount -t vfat -o #ro,context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337 /#dev/block/platform/msm_sdcc.1/by-name/modem /firmware
+#fi;
 
 # run ROM scripts
 $BB sh /init.qcom.post_boot.sh;
@@ -124,7 +124,7 @@ $BB chmod 666 /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0
 $BB chmod 666 /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/*_freq
 
 # make sure our max gpu clock is set via sysfs
-echo "200000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/min_freq
+echo "27000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/min_freq
 echo "450000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/max_freq
 
 if [ ! -d /data/.gabriel ]; then
