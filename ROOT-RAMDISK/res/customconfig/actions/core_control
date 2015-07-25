@@ -10,11 +10,11 @@ if [ "a$2" != "a" ]; then
 	case "${core_control}" in
 		0)
 			if [ "$(cat /sys/class/thermal/thermal_zone5/temp)" -le "68" ]; then
-				echo "0" > /sys/module/msm_thermal/core_control/core_control;
+				echo "0" > /sys/module/msm_thermal/core_control/enabled;
 			fi;
 		;;
 		1)
-			echo "1" > /sys/module/msm_thermal/core_control/core_control;
+			echo "1" > /sys/module/msm_thermal/core_control/enabled;
 		;;
 		*)
 			core_control=0;

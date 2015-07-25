@@ -1,5 +1,5 @@
 BB=/sbin/busybox;
-DEVICE=/res/synapse/files/lg_g2.sh;
+DEVICE=/res/synapse/files/lg_g3.sh;
 
 case $1 in
 	CPUFrequencyList)
