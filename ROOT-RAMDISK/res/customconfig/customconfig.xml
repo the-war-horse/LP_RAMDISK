@@ -27,6 +27,9 @@
 			<spinnerItem name="Ondemand" value="ondemand"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
+			<spinnerItem name="Zzmoove" value="zzmoove"/> 
+			<spinnerItem name="Bioshock" value="bioshock"/> 
+			<spinnerItem name="Smartmax" value="smartmax"/> 
 		</spinner>
 
 		<spinner description="This will set the CPU1 governor." name="Default CPU1 Governor" action="default_cpu1_gov">
@@ -44,6 +47,9 @@
 			<spinnerItem name="Ondemand" value="ondemand"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
+			<spinnerItem name="Zzmoove" value="zzmoove"/> 
+			<spinnerItem name="Bioshock" value="bioshock"/> 
+			<spinnerItem name="Smartmax" value="smartmax"/> 
 			<spinnerItem name="Performance" value="performance"/> 
 		</spinner>
 
@@ -62,6 +68,9 @@
 			<spinnerItem name="Ondemand" value="ondemand"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
+			<spinnerItem name="Zzmoove" value="zzmoove"/> 
+			<spinnerItem name="Bioshock" value="bioshock"/> 
+			<spinnerItem name="Smartmax" value="smartmax"/> 
 			<spinnerItem name="Performance" value="performance"/> 
 		</spinner>
 
@@ -80,8 +89,13 @@
 			<spinnerItem name="Ondemand" value="ondemand"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
+			<spinnerItem name="Zzmoove" value="zzmoove"/> 
+			<spinnerItem name="Bioshock" value="bioshock"/> 
+			<spinnerItem name="Smartmax" value="smartmax"/> 
 			<spinnerItem name="Performance" value="performance"/> 
 		</spinner>
+
+		<seekBar description="Here you can set ZZMOOVE Profile Number" name="ZZMOOVE Profile Number" action="generic /sys/devices/system/cpu/cpufreq/zzmoove/profile_number" unit="#" min="0" reversed="false" step="1" max="11"/>
 
 	</settingsPane>
 
