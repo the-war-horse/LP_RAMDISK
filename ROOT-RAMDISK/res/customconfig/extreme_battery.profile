@@ -3,6 +3,7 @@ default_cpu0_gov=ondemand
 default_cpu1_gov=ondemand
 default_cpu2_gov=ondemand
 default_cpu3_gov=ondemand
+default_zz_profile=0
 cpu_boost_freq=1497600
 input_boost_ms=30
 nr_boost_cpus=1

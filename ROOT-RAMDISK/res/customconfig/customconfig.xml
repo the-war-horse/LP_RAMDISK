@@ -101,7 +101,7 @@
 
 	<settingsPane description="Here you can tune the Touch Boost Controls" name="Touch Boost Controls">
 
-		<spinner description="Touch boost control - when you touch the screen or scroll, the CPU's frequency will be boosted to maximum frequency set in order to help reducing LAG and allow fast and smooth operations. Too high frequencies will use more power." name="Touch Boost Frequency-CPU0" action="cpu_boost_freq 0">
+		<spinner description="Touch boost control - when you touch the screen or scroll, the CPU's frequency will be boosted to maximum frequency set in order to help reducing LAG and allow fast and smooth operations. Too high frequencies will use more power." name="Touch Boost Frequency-CPU0" action="cpu_boost_freq">
 			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
@@ -115,7 +115,7 @@
 			<spinnerItem name="DISABLED" value="0"/> 
 		</spinner>
 
-		<spinner description="Touch boost frequency for CPU1" name="Touch Boost Frequency-CPU1" action="cpu_boost_freq 1">
+		<spinner description="Touch boost frequency for CPU1" name="Touch Boost Frequency-CPU1" action="cpu_boost_freq">
 			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
@@ -129,7 +129,7 @@
 			<spinnerItem name="DISABLED" value="0"/> 
 		</spinner>
 
-		<spinner description="Touch boost frequency for CPU2" name="Touch Boost Frequency-CPU2" action="cpu_boost_freq 2">
+		<spinner description="Touch boost frequency for CPU2" name="Touch Boost Frequency-CPU2" action="cpu_boost_freq">
 			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
@@ -143,7 +143,7 @@
 			<spinnerItem name="DISABLED" value="0"/> 
 		</spinner>
 
-		<spinner description="Touch boost frequency for CPU3" name="Touch Boost Frequency-CPU3" action="cpu_boost_freq 3">
+		<spinner description="Touch boost frequency for CPU3" name="Touch Boost Frequency-CPU3" action="cpu_boost_freq">
 			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
