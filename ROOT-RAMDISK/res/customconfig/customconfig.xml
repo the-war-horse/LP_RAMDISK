@@ -163,7 +163,7 @@
 
 		<seekBar description="Here you can set Touch Boost interval in miliseconds! 100ms is equal 0.1sec, when touch screen report touch here we set timer for how long to wait before setting core min frequency for duration above, this is Ultra Fast even on 500ms" name="CPU Touch Boost Interval" action="generic /sys/module/cpu_boost/parameters/min_input_interval" unit="ms" min="100" reversed="false" step="50" max="1500"/>
 
-		<checkbox description="Enable or Disable Hotplug Boost" name="Hotplug-Boost"  action="generic01 /sys/module/cpu_boost/parameters/hotplug_boost" label="Hotplug-Boost"/>
+		<checkbox description="Enable or Disable Hotplug Boost" name="Hotplug-Boost" action="generic01 /sys/module/cpu_boost/parameters/hotplug_boost" label="Hotplug-Boost"/>
 
 		<checkbox description="Enable or Disable Load based syncs" name="load-based-syncs"  action="generic01 /sys/module/cpu_boost/parameters/load_based_syncs" label="load-based-syncs"/>
 
