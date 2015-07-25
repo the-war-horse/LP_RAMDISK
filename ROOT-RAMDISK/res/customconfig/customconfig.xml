@@ -127,10 +127,7 @@
 	<settingsPane description="Here you can tune the Maximum CPU Frequency per core, when set here no other APP or Service can set higher!!!" name="Maximum CPU Frequency">
 
 		<spinner description="Maximum CPU0 Speed. Here, you can change the maximum CPU0 frequency allowed. This depends on CPU-Tweaks (has to be enabled above)! (Default is 2265600 Khz)" name="Max CPU0 Frequency" action="cpu0_max_freq">
-			<spinnerItem name="2803200" value="2803200"/> 
-			<spinnerItem name="2726400" value="2726400"/> 
-			<spinnerItem name="2572800" value="2572800"/> 
-			<spinnerItem name="2419200" value="2419200"/> 
+			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
 			<spinnerItem name="1728000" value="1728000"/> 
@@ -143,16 +140,12 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
 
 		<spinner description="Maximum CPU1 Speed. Here, you can change the maximum CPU1 frequency allowed. This depends on CPU-Tweaks (has to be enabled above)! (Default is 2265600 Khz)" name="Max CPU1 Frequency" action="cpu1_max_freq">
-			<spinnerItem name="2803200" value="2803200"/> 
-			<spinnerItem name="2726400" value="2726400"/> 
-			<spinnerItem name="2572800" value="2572800"/> 
-			<spinnerItem name="2419200" value="2419200"/> 
+			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
 			<spinnerItem name="1728000" value="1728000"/> 
@@ -165,16 +158,12 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
 
 		<spinner description="Maximum CPU2 Speed. Here, you can change the maximum CPU2 frequency allowed. This depends on CPU-Tweaks (has to be enabled above)! (Default is 2265600 Khz)" name="Max CPU2 Frequency" action="cpu2_max_freq">
-			<spinnerItem name="2803200" value="2803200"/> 
-			<spinnerItem name="2726400" value="2726400"/> 
-			<spinnerItem name="2572800" value="2572800"/> 
-			<spinnerItem name="2419200" value="2419200"/> 
+			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
 			<spinnerItem name="1728000" value="1728000"/> 
@@ -187,16 +176,12 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
 
 		<spinner description="Maximum CPU3 Speed. Here, you can change the maximum CPU3 frequency allowed. This depends on CPU-Tweaks (has to be enabled above)! (Default is 2265600 Khz)" name="Max CPU3 Frequency" action="cpu3_max_freq">
-			<spinnerItem name="2803200" value="2803200"/> 
-			<spinnerItem name="2726400" value="2726400"/> 
-			<spinnerItem name="2572800" value="2572800"/> 
-			<spinnerItem name="2419200" value="2419200"/> 
+			<spinnerItem name="2457600" value="2457600"/> 
 			<spinnerItem name="2265600" value="2265600"/> 
 			<spinnerItem name="1958400" value="1958400"/> 
 			<spinnerItem name="1728000" value="1728000"/> 
@@ -209,7 +194,6 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
@@ -224,7 +208,6 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
@@ -235,7 +218,6 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
@@ -246,7 +228,6 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
@@ -257,7 +238,6 @@
 			<spinnerItem name="883200" value="883200"/> 
 			<spinnerItem name="729600" value="729600"/> 
 			<spinnerItem name="652800" value="652800"/> 
-			<spinnerItem name="499200" value="499200"/> 
 			<spinnerItem name="422400" value="422400"/> 
 			<spinnerItem name="300000" value="300000"/> 
 		</spinner>
