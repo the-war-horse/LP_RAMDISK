@@ -1,7 +1,7 @@
 #!/sbin/busybox sh
 
 BB=/sbin/busybox;
-DEVICE=`sh /res/synapse/files/lg_g3.sh`;
+DEVICE=`sh /res/synapse/files/lg_g2.sh`;
 
 UCI_CONFIG=/res/synapse/config.json;
 UCI_ACTION=/res/synapse/actions/;

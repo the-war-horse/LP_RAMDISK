@@ -15,11 +15,8 @@
 
 	<settingsPane description="Here you can tune the CPU Active Governor per core best to set ONDEMAND on core0 for stability." name="CPU Active Governor">
 
-		<spinner description="This will set the CPU0 governor." name="Default CPU0 Governor" action="default_cpu0_gov">
+		<spinner description="This will set the CPU0 governor. YOU CAN ONLY USE FEW GOVS On CORE0! dont ask to add others. they not stable on core0" name="Default CPU0 Governor" action="default_cpu0_gov">
 			<spinnerItem name="HYPER" value="HYPER"/> 
-			<spinnerItem name="Alucard" value="alucard"/> 
-			<spinnerItem name="Nightmare" value="nightmare"/> 
-			<spinnerItem name="Darkness" value="darkness"/> 
 			<spinnerItem name="Intellidemand" value="intellidemand"/> 
 			<spinnerItem name="Intelliactive" value="intelliactive"/> 
 			<spinnerItem name="Yankactive" value="yankactive"/> 
@@ -28,10 +25,8 @@
 			<spinnerItem name="Intellimm" value="intellimm"/> 
 			<spinnerItem name="Pegasusq" value="pegasusq"/> 
 			<spinnerItem name="Ondemand" value="ondemand"/> 
-			<spinnerItem name="Ondemandplus" value="ondemandplus"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
-			<spinnerItem name="Performance" value="performance"/> 
 		</spinner>
 
 		<spinner description="This will set the CPU1 governor." name="Default CPU1 Governor" action="default_cpu1_gov">
@@ -47,7 +42,6 @@
 			<spinnerItem name="Intellimm" value="intellimm"/> 
 			<spinnerItem name="Pegasusq" value="pegasusq"/> 
 			<spinnerItem name="Ondemand" value="ondemand"/> 
-			<spinnerItem name="Ondemandplus" value="ondemandplus"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
 			<spinnerItem name="Performance" value="performance"/> 
@@ -66,7 +60,6 @@
 			<spinnerItem name="Intellimm" value="intellimm"/> 
 			<spinnerItem name="Pegasusq" value="pegasusq"/> 
 			<spinnerItem name="Ondemand" value="ondemand"/> 
-			<spinnerItem name="Ondemandplus" value="ondemandplus"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
 			<spinnerItem name="Performance" value="performance"/> 
@@ -85,7 +78,6 @@
 			<spinnerItem name="Intellimm" value="intellimm"/> 
 			<spinnerItem name="Pegasusq" value="pegasusq"/> 
 			<spinnerItem name="Ondemand" value="ondemand"/> 
-			<spinnerItem name="Ondemandplus" value="ondemandplus"/> 
 			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Conservative" value="conservative"/> 
 			<spinnerItem name="Performance" value="performance"/> 
@@ -317,7 +309,7 @@
 
 	<settingsPane description="Here you can tune HotPlug CPU Thermal Controls, ON or OFF cores when over temp to reduce heat. but this will reduce performance, as you get one core enabled but on full power! others will wait till heat will be reduced." name="HotPlug CPU Thermal Controls">
 
-		<spinner description="Hotplug CPU Thermal control main switch, this allow to shutdown cores 1,2,3 and leave core 0 as main core on high frequency. but it's reduces global performance on high temp, if set disabled then all CPU cores will be online and operate at lower frequencies when the temperature is high!" name="HotPlug Thermal CPU Control" action="generic /sys/module/msm_thermal/core_control/core_control">
+		<spinner description="Hotplug CPU Thermal control main switch, this allow to shutdown cores 1,2,3 and leave core 0 as main core on high frequency. but it's reduces global performance on high temp, if set disabled then all CPU cores will be online and operate at lower frequencies when the temperature is high!" name="HotPlug Thermal CPU Control" action="core_control">
 			<spinnerItem name="Enabled" value="1"/> 
 			<spinnerItem name="Disabled" value="0"/> 
 		</spinner>
@@ -492,6 +484,11 @@
 			<spinnerItem name="2560 kB" value="2560"/> 
 		</spinner>
 
+		<spinner description="MMC power usage control, when set performance mode MMC I/O write speed will be very fast, when set in power save mode write performance will be degraded but more power saved." name="MMC Power Usage" action="mmc_mode">
+			<spinnerItem name="MMC Performance" value="performance"/> 
+			<spinnerItem name="MMC Power Save" value="power_save"/> 
+		</spinner>
+
 		<button description="Use this button to Trim System and Data Nand partitions to speed up Read and Write Access, good to use once in a day or two." name="Trim System and Data" action="push-actions/fstrim" label="Trim NOW"/>
 
 		<spinner description="This will set the default AWAKE I/O scheduler for internal storage. (Default equal ZEN)" name="Default Awake I/O Scheduler" action="scheduler">
@@ -541,8 +538,6 @@
 			<spinnerItem name="aggressive" value="aggressive"/> 
 			<spinnerItem name="exterminate" value="exterminate"/> 
 		</spinner>
-
-		<checkbox description="Allow kernel to release highmem RAM and allocate free RAM to onscreen APP. this may improve UI and APPS performance, but it's also can unload the home app from RAM and other services, use for testing, if all OK, great, if any strange problems, turn it OFF (default is unchecked! OFF)" name="High Mem Dirtyable" action="generic01 /proc/sys/vm/highmem_is_dirtyable" label="High MEM Release"/>
 
 		<seekBar description="Dirty background memory buffer. The more you set, the more memory will be used for write buffer for background operations. Buffer is released when it is needed to free RAM" name="Dirty Background ratio" action="generic /proc/sys/vm/dirty_background_ratio" unit="%" min="5" reversed="false" step="5" max="80"/>
 

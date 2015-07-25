@@ -9,20 +9,24 @@ echo "-1000" > /proc/1/oom_score_adj;
 
 OPEN_RW()
 {
-	$BB mount -o remount,rw /;
-	$BB mount -o remount,rw /system;
+	if [ "$($BB mount | grep rootfs | cut -c 26-27 | grep -c ro)" -eq "1" ]; then
+		$BB mount -o remount,rw /;
+	fi;
+	if [ "$($BB mount | grep system | grep -c ro)" -eq "1" ]; then
+		$BB mount -o remount,rw /system;
+	fi;
 }
 OPEN_RW;
 
-#selinux_status=$(grep -c "selinux=1" /proc/cmdline);
-#if [ "$selinux_status" -eq "1" ]; then
-#	restorecon -RF /system
-#	if [ -e /system/bin/app_process32_xposed ]; then
-#		chcon u:object_r:zygote_exec:s0 /system/bin/app_process32_xposed
-#	fi;
-#	umount /firmware;
-#	mount -t vfat -o #ro,context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337 /#dev/block/platform/msm_sdcc.1/by-name/modem /firmware
-#fi;
+selinux_status=$(grep -c "selinux=1" /proc/cmdline);
+if [ "$selinux_status" -eq "1" ]; then
+	restorecon -RF /system
+	if [ -e /system/bin/app_process32_xposed ]; then
+		chcon u:object_r:zygote_exec:s0 /system/bin/app_process32_xposed
+	fi;
+	umount /firmware;
+	mount -t vfat -o ro,context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337 /dev/block/platform/msm_sdcc.1/by-name/modem /firmware
+fi;
 
 # run ROM scripts
 $BB sh /init.qcom.post_boot.sh;
@@ -43,7 +47,7 @@ $BB cp -a /lib/modules/*.ko /system/lib/modules/;
 # create init.d folder if missing
 if [ ! -d /system/etc/init.d ]; then
 	mkdir -p /system/etc/init.d/
-	$BB chmod 755 /system/etc/init.d/;
+	$BB chmod -R 755 /system/etc/init.d/;
 fi;
 
 OPEN_RW;
@@ -72,7 +76,8 @@ CRITICAL_PERM_FIX()
 	$BB chmod -R 777 /tmp/;
 	$BB chmod -R 775 /res/;
 	$BB chmod -R 06755 /sbin/ext/;
-	$BB chmod 06755 /sbin/busybox
+	$BB chmod 06755 /sbin/busybox;
+	$BB chmod 06755 /system/xbin/busybox;
 }
 CRITICAL_PERM_FIX;
 
@@ -130,7 +135,7 @@ fi;
 # just set numer $RESET_MAGIC + 1 and profiles will be reset one time on next boot with new kernel.
 # incase that ADMIN feel that something wrong with global STweaks config and profiles, then ADMIN can add +1 to CLEAN_GABRIEL_DIR
 # to clean all files on first boot from /data/.gabriel/ folder.
-RESET_MAGIC=7;
+RESET_MAGIC=3;
 CLEAN_GABRIEL_DIR=1;
 
 if [ ! -e /data/.gabriel/reset_profiles ]; then
@@ -202,6 +207,12 @@ fi;
 
 OPEN_RW;
 
+# kill charger logo binary to prevent ROM running it.
+CHECK_BOOT_STATE=$(cat /proc/cmdline | grep "androidboot.mode=" | $BB wc -l);
+if [ "$CHECK_BOOT_STATE" -eq "0" ]; then
+	rm /sbin/chargerlogo;
+fi;
+
 # copy cron files
 $BB cp -a /res/crontab/ /data/
 if [ ! -e /data/crontab/custom_jobs ]; then
@@ -237,9 +248,6 @@ MODULES_LOAD()
 	fi;
 }
 
-# enable kmem interface for everyone by GM
-echo "0" > /proc/sys/kernel/kptr_restrict;
-
 # disable debugging on some modules
 if [ "$logger" -ge "1" ]; then
 	echo "N" > /sys/module/kernel/parameters/initcall_debug;
@@ -262,12 +270,8 @@ OPEN_RW;
 # set ondemand tuning.
 ONDEMAND_TUNING;
 
-# Turn off CORE CONTROL, to boot on all cores!
-$BB chmod 666 /sys/module/msm_thermal/core_control/*
-echo "0" > /sys/module/msm_thermal/core_control/core_control;
-
 # Start any init.d scripts that may be present in the rom or added by the user
-$BB chmod 755 /system/etc/init.d/*;
+$BB chmod -R 755 /system/etc/init.d/;
 if [ "$init_d" == "on" ]; then
 	(
 		$BB nohup $BB run-parts /system/etc/init.d/ > /data/.gabriel/init.d.txt &
@@ -279,6 +283,8 @@ else
 		echo "no root script in init.d";
 	fi;
 fi;
+
+OPEN_RW;
 
 # Fix critical perms again after init.d mess
 CRITICAL_PERM_FIX;
@@ -303,16 +309,27 @@ if [ "$(cat /sys/module/powersuspend/parameters/sleep_state)" -eq "0" ]; then
 fi;
 
 # tune I/O controls to boost I/O performance
-echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/nomerges;
-echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/nomerges;
-echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/rq_affinity;
-echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/rq_affinity;
 
-# script finish here, so let me know when
-TIME_NOW=$(date)
-echo "$TIME_NOW" > /data/boot_log_dm
+#This enables the user to disable the lookup logic involved with IO
+#merging requests in the block layer. By default (0) all merges are
+#enabled. When set to 1 only simple one-hit merges will be tried. When
+#set to 2 no merge algorithms will be tried (including one-hit or more
+#complex tree/hash lookups).
+if [ "$(cat /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/nomerges)" != "2" ]; then
+	echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/nomerges;
+	echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/nomerges;
+fi;
 
-$BB mount -o remount,ro /system;
+#If this option is '1', the block layer will migrate request completions to the
+#cpu "group" that originally submitted the request. For some workloads this
+#provides a significant reduction in CPU cycles due to caching effects.
+#For storage configurations that need to maximize distribution of completion
+#processing setting this option to '2' forces the completion to run on the
+#requesting cpu (bypassing the "group" aggregation logic).
+if [ "$(cat /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/rq_affinity)" != "1" ]; then
+	echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/rq_affinity;
+	echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/rq_affinity;
+fi;
 
 (
 	sleep 30;
@@ -321,10 +338,7 @@ $BB mount -o remount,ro /system;
 	CHARGER_STATE=$(cat /sys/class/power_supply/battery/charging_enabled);
 	if [ "$CHARGER_STATE" -eq "1" ] && [ "$adb_selector" -eq "1" ]; then
 		stop adbd
-		echo "0" > /sys/class/android_usb/android0/enable;
-		echo "633E" > /sys/class/android_usb/android0/idProduct;
-		echo "mtp:mtp,acm,diag,adb" > /sys/class/android_usb/android0/functions;
-		echo "1" > /sys/class/android_usb/android0/enable;
+		sleep 1;
 		start adbd
 	fi;
 
@@ -341,4 +355,26 @@ $BB mount -o remount,ro /system;
 	if [ "$($BB pidof com.google.android.gms.wearable | wc -l)" -eq "1" ]; then
 		$BB kill $($BB pidof com.google.android.gms.wearable);
 	fi;
+
+	# Google Services battery drain fixer by Alcolawl@xda
+	# http://forum.xda-developers.com/google-nexus-5/general/script-google-play-services-battery-t3059585/post59563859
+	pm enable com.google.android.gms/.update.SystemUpdateActivity
+	pm enable com.google.android.gms/.update.SystemUpdateService
+	pm enable com.google.android.gms/.update.SystemUpdateService$ActiveReceiver
+	pm enable com.google.android.gms/.update.SystemUpdateService$Receiver
+	pm enable com.google.android.gms/.update.SystemUpdateService$SecretCodeReceiver
+	pm enable com.google.android.gsf/.update.SystemUpdateActivity
+	pm enable com.google.android.gsf/.update.SystemUpdatePanoActivity
+	pm enable com.google.android.gsf/.update.SystemUpdateService
+	pm enable com.google.android.gsf/.update.SystemUpdateService$Receiver
+	pm enable com.google.android.gsf/.update.SystemUpdateService$SecretCodeReceiver
+
+	# stop core control if need to
+	echo "$core_control" > /sys/module/msm_thermal/core_control/core_control;
+
+	# script finish here, so let me know when
+	TIME_NOW=$(date)
+	echo "$TIME_NOW" > /data/boot_log_dm
+
+	$BB mount -o remount,ro /system;
 )&
