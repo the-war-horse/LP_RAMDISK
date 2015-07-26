@@ -336,6 +336,8 @@
 
 	<settingsPane description="Here you can tune CPU Thermal Controls, with this kernel ROM thermal service and Intelligent Thermal Kernel driver can be enabled together! To protect your device from overheating and melting the chipset, screen and your fingers! Controls below are active for Dual Intelligent Temp Control. In case the ROM service dies, kernel will protect your chipset, LCD and other components from damage! only if Dual Intelligent Temp Control is used" name="CPU Thermal Protection">
 
+		<checkbox description="Enable or Disable Thermal Monitor" name="Thermal Monitor"  action="generic01 /sys/module/msm_thermal/parameters/enabled" label="Thermal Monitor"/>
+
 		<spinner description="CPU Thermal control, Can be Default driver without controls, or Dual Intelligent Thermal driver with controls below and ROM thermal control, it will limit CPU frequency when CPU reach the max limit heat, till cooled and restore full power, by using Default Temp Control you have one temp protection by ROM, and if ROM stuck and hotboot there is no one to protect your CPU from heat up the LCD and burn it. BUT you get better game performance by using ONE protection. when Dual Intelligent Temp Control enabled, kernel protects your hardware in any condition! reboot or hotboot! or any other problem. also it's possible to use only Intelligent Temp Control, then ROM service is turned OFF. only kernel control the CPU temp." name="CPU Temp Control" action="msm_thermal">
 			<spinnerItem name="Default Temp Control" value="msm_temp"/> 
 			<spinnerItem name="Dual Intelligent Temp Control" value="intelli_temp"/> 
@@ -344,14 +346,15 @@
 
 		<seekBar description="Here you can adjust the temperature CPU cores can reach before they are throttled down in order to allow the CPU to cool down and keep the phone at normal temperature." name="CPU Max Heat" action="generic /sys/module/msm_thermal/parameters/limit_temp_degC" unit="°C" min="50" reversed="false" step="1" max="78"/>
 
-		<seekBar description="Here you can adjust the Frequency Step when throttling down" name="Frequency Step" action="generic /sys/module/msm_thermal/parameters/freq_step" unit="Step" min="1" reversed="false" step="1" max="4"/>
+<seekBar description="Here you can adjust the temperature to start shutting down Cores." name="CPU Max Heat" action="generic /sys/module/msm_thermal/parameters/core_limit_temp_degC" unit="°C" min="50" reversed="false" step="1" max="100"/>
+
+		<seekBar description="Here you can adjust the Frequency control mask" name="Frequency control mask" action="generic /sys/module/msm_thermal/parameters/freq_control_mask" unit="Step" min="1" reversed="false" step="1" max="100"/>
 
 		<seekBar description="Here you can adjust the Temp Pull Timer interval, lower set force driver to check temp faster and tune max frequency" name="Temp Pull Timer" action="generic /sys/module/msm_thermal/parameters/poll_ms" unit="ms" min="200" reversed="false" step="50" max="500"/>
 
-		<seekBar description="Here you can adjust the Temperature Hysteresis for driver to calculate temp difference and adjust the frequency" name="Temperature Hysteresis" action="generic /sys/module/msm_thermal/parameters/temp_hysteresis_degC" unit="°C" min="2" reversed="false" step="1" max="20"/>
-		<seekBar description="Here you can adjust the Thermal Limit Lowest Frequency, 7 = 1.19Ghz 6 = 1.03Ghz and so on." name="Thermal Limit Lowest Frequency" action="generic /sys/module/msm_thermal/parameters/thermal_limit_low" unit="Freq" min="5" reversed="false" step="1" max="10"/>
+		<seekBar description="Here you can adjust the Wakeup Timer" name="Wakeup Timer" action="generic /sys/module/msm_thermal/thermal_timer/wakeup_ms" unit="ms" min="0" reversed="false" step="50" max="500"/>
 
-		<checkbox description="Here you can enable or disable Immediately Limit Stop, it's allow to set max frequencies if heat is not rising it's stress the driver but allow higher performance and add 3c temp to global limit, use with caution." name="Immediately frequencies Limit Stop" action="generic01 /sys/module/msm_thermal/parameters/immediately_limit_stop" label="Immediately Limit Stop"/>
+		<seekBar description="Here you can adjust the number of Core that can be Offline" name="core number" action="generic /sys/module/msm_thermal/core_control/cpus_offlined" unit="#" min="0" reversed="false" step="1" max="4"/>
 
 	</settingsPane>
 
@@ -370,8 +373,6 @@
 		</spinner>
 
 		<seekBar description="Here you can change HotPlug CORES Max Heat before turning OFF cores from 3 to 1 and keep normal phone heat. you need to set this control BELOW Max TEMP Control in above section! then cores will go down when overheated! Depends on Intelli CPU Cores Control (must be ENABLED)!" name="Intelli CORE Max Heat" action="generic /sys/module/msm_thermal/parameters/core_limit_temp_degC" unit="°C" min="50" reversed="false" step="1" max="80"/>
-
-		<seekBar description="Here you can adjust the Core HotPlug Temperature Hysteresis for driver to calculate temp difference and adjust the online cores by turning them OFF Depends on Intelli CPU Cores Control (must be ENABLED)!" name="Core Temperature Hysteresis" action="generic /sys/module/msm_thermal/parameters/core_temp_hysteresis_degC" unit="°C" min="2" reversed="false" step="1" max="20"/>
 
 	</settingsPane>
 
@@ -427,39 +428,25 @@
 		<spinner description="Select GPU Governor that will control GPU frequency according to GPU load and system needs - if you select Performance Governor, then the GPU will be at MAX frequency nonstop!" name="GPU Active Governor" action="gpu_governor">
 			<spinnerItem name="MSM-Adreno (default)" value="msm-adreno-tz"/> 
 			<spinnerItem name="Simple_Ondemand" value="simple_ondemand"/> 
-			<spinnerItem name="Conservative" value="conservative"/> 
+			<spinnerItem name="Powersave" value="powersave"/> 
 			<spinnerItem name="Performance" value="performance"/> 
 		</spinner>
 
 		<button description="To update GPU Governor tuning after selection, Push This" name="Update GPU Governor Tuning" action="push-actions/gpu_update" label="Update GPU Governor"/>
 
-		<spinner description="Select GPU Max frequency when needed! GPU will stay at MIN frequency on IDLE. 533Mhz and 650Mhz are OC clocks. if any problems, then use stock max 450Mhz" name="GPU Max Speed" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/max_freq">
-			<spinnerItem name="650 Mhz" value="650000000"/> 
-			<spinnerItem name="533 Mhz" value="533333000"/> 
-			<spinnerItem name="450 Mhz" value="450000000"/> 
+		<spinner description="Select GPU Max frequency when needed! GPU will stay at MIN frequency on IDLE." name="GPU Max Speed" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/max_freq">
+			<spinnerItem name="578 Mhz" value="578000000"/> 
+			<spinnerItem name="462 Mhz" value="462400000"/> 
 			<spinnerItem name="389 Mhz" value="389000000"/> 
-			<spinnerItem name="320 Mhz" value="320000000"/> 
+			<spinnerItem name="330 Mhz" value="330000000"/> 
 			<spinnerItem name="200 Mhz" value="200000000"/> 
 			<spinnerItem name="100 Mhz" value="100000000"/> 
-		</spinner>
-
-		<spinner description="Select GPU Min frequency when going to IDLE - if you set higher than 200 MHz, then the GPU will hold selected frequency on IDLE." name="GPU Min Speed" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/min_freq">
-			<spinnerItem name="100 Mhz" value="100000000"/> 
-			<spinnerItem name="200 Mhz" value="200000000"/> 
-			<spinnerItem name="320 Mhz" value="320000000"/> 
-			<spinnerItem name="389 Mhz" value="389000000"/> 
-			<spinnerItem name="450 Mhz" value="450000000"/> 
-			<spinnerItem name="533 Mhz" value="533333000"/> 
-			<spinnerItem name="650 Mhz" value="650000000"/> 
+			<spinnerItem name="27 Mhz" value="27000000"/> 
 		</spinner>
 
 	</settingsPane>
 
 	<settingsPane description="Here you can tune Msm-Adreno-Tz Governor! Use the controls ONLY if Msm-Adreno-Tz is selected (otherwise nothing will happen)." name="Msm-Adreno-Tz Controls">
-
-		<seekBar description="Msm-Adreno-Tz CAP, more info will be added later, must NOT be HIGHER than TARGET value! (Default: 75)" name="CAP Value" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/gpufreq/msm-adreno-tz/cap" unit="%" min="40" reversed="false" step="5" max="90"/>
-
-		<seekBar description="Msm-Adreno-tz TARGET, more info will be added later, must NOT be LOWER than TARGET value! (Default: 80)" name="TARGET Value" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/gpufreq/msm-adreno-tz/target" unit="%" min="40" reversed="false" step="5" max="90"/>
 
 		<spinner description="Here you can manually control Simple_ramp_threshold and Simple_laziness value, or let the Governor decide automatically. If set to AUTO, then controls below have no effect." name="Msm-Adreno-Tz Extra Controls" action="generic /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate">
 			<spinnerItem name="Auto Mode" value="0"/> 
@@ -472,48 +459,15 @@
 
 	</settingsPane>
 
-	<settingsPane description="Here you can tune Simple_Ondemand Governor! Use the controls ONLY if Simple_Ondemand is selected (otherwise nothing will happen)." name="Simple_Ondemand Controls">
+	<settingsPane description="Here you can tune Adreno Idler Parameters." name="Adreno-Idler Controls">
 
-		<seekBar description="Simple_Ondemand Downdifferential - when GPU load drops below Downdifferential, GPU frequency is reduced to MIN (must NOT be HIGHER than Upthreshold value)! (Default equal 20)" name="Downdifferential Value" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/gpufreq/simple_ondemand/downdifferential" unit="%" min="5" reversed="false" step="5" max="60"/>
+		<checkbox description="Enable or Disable Adreno Idler" name="Adreno-Idler"  action="generic01 /sys/module/adreno_idler/parameters/adreno_idler_active" label="Adreno Idler Active"/>
 
-		<seekBar description="Simple_Ondemand Upthreshold - when GPU load raises above Upthreshold, GPU frequency is raised to next frequency step until it reaches MAX (must NOT be LOWER than Downdifferential)! (Default equal 60)" name="Upthreshold Value" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/gpufreq/simple_ondemand/upthreshold" unit="%" min="30" reversed="false" step="5" max="90"/>
+		<seekBar description="Adreno Idler Down Differential" name="Adreno Idler Down Differential" action="generic /sys/module/adreno_idler/parameters/adreno_idler_downdifferential" unit="ramp" min="0" reversed="false" step="1" max="100"/>
 
-	</settingsPane>
+		<seekBar description="Adreno Idler Idle Wait" name="Adreno Idler Idle Wait" action="generic /sys/module/adreno_idler/parameters/adreno_idler_idlewait" unit="ramp" min="0" reversed="false" step="1" max="100"/>
 
-	<settingsPane description="Here you can tune Conservative Governor! Use the controls ONLY if Conservative is selected (otherwise nothing will happen)." name="Conservative Controls">
-
-		<seekBar description="Conservative Downthreshold - hen GPU load drops below Downdifferential, GPU frequency is reduced to MIN (must NOT be HIGHER than Upthreshold value)! (Default equal 20)" name="Downthreshold Value" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/gpufreq/conservative/downthreshold" unit="%" min="5" reversed="false" step="5" max="60"/>
-
-		<seekBar description="Conservative Upthreshold - when GPU load raises above Upthreshold, GPU frequency is raised to next frequency step until it reaches MAX (must NOT be LOWER than Downthreshold)! (Default equal 50)" name="Upthreshold Value" action="generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/gpufreq/conservative/upthreshold_cons" unit="%" min="30" reversed="false" step="5" max="90"/>
-
-	</settingsPane>
-
-</settingsTab>
-
-<settingsTab name="SOUND CONTROL">
-
-	<settingsPane description="Here you can select main control app" name="Sound Controls">
-
-		<spinner description="Sound Gain Control selector, here you can select gain control app. or Dorimanx App or Faux Sound! when one app selected other has no effect on gain! controls can be tuned but no effect! (default Dorimanx App)" name="Gain Control App Selector" action="generic /sys/kernel/sound_control_3/lge_stweaks_control">
-			<spinnerItem name="Dorimanx App Control" value="1"/>
-			<spinnerItem name="Faux Sound Control" value="0"/>
-		</spinner>
-
-	</settingsPane>
-
-	<settingsPane description="Here you can tune MIC, SPEAKER and HeadPhones gain volume" name="Sound Controls">
-
-		<seekBar description="Control for HeadPhones LEFT gain volume!" name="HeadPhones Gain LEFT" action="generic_headphone_left" unit="gain" min="-30" reversed="false" step="1" max="20"/>
-
-		<seekBar description="Control for HeadPhones RIGHT gain volume!" name="HeadPhones Gain RIGHT" action="generic_headphone_right" unit="gain" min="-30" reversed="false" step="1" max="20"/>
-
-		<seekBar description="Control for InCall small speaker gain volume! depend on cortex service ON (default is ON), works when no headphones plugged! and you are on call and screen is turned off for 3 sec! then gain is changed for small speaker. when call is finished, in case screen is ON, in 10 sec gain will be restored for HEADPHONES gains (left, right) that are set above, same if screen is turned off! for 3 sec without call. this control will work only if Dorimanx App is the gain controller! see on top selector" name="InCall Speaker Gain" action="generic_cortex /tmp/incall_volume" unit="gain" min="-6" reversed="false" step="1" max="6"/>
-
-		<seekBar description="Control for Loud Speaker gain volume! When you set higher, better listen to music so you will know when it is more than what the hardware can handle." name="Speaker Gain" action="generic_speaker_sound /sys/kernel/sound_control_3/lge_speaker_gain" unit="gain" min="-15" reversed="false" step="1" max="20"/>
-
-		<seekBar description="Control for Camera recording MIC gain volume!" name="Camera MIC gain" action="generic_mic_sound /sys/kernel/sound_control_3/lge_cam_mic_gain" unit="gain" min="-40" reversed="false" step="1" max="24"/>
-
-		<seekBar description="Control for Handset MIC gain volume on call!" name="Handset MIC gain on call" action="generic_mic_sound /sys/kernel/sound_control_3/lge_mic_gain" unit="gain" min="-40" reversed="false" step="1" max="24"/>
+		<seekBar description="Adreno Idler Idle Workload" name="Adreno Idler Idle Workload" action="generic /sys/module/adreno_idler/parameters/adreno_idler_idleworkload" unit="ramp" min="2000" reversed="false" step="500" max="10000"/>
 
 	</settingsPane>
 
@@ -541,24 +495,30 @@
 
 		<spinner description="This will set the default AWAKE I/O scheduler for internal storage. (Default equal ZEN)" name="Default Awake I/O Scheduler" action="scheduler">
 			<spinnerItem name="CFQ" value="cfq"/> 
-			<spinnerItem name="BFQ" value="bfq"/> 
 			<spinnerItem name="DEADLINE" value="deadline"/> 
 			<spinnerItem name="NOOP" value="noop"/> 
 			<spinnerItem name="ROW" value="row"/> 
 			<spinnerItem name="SIO" value="sio"/> 
+			<spinnerItem name="SIOPLUS" value="sioplus"/> 
 			<spinnerItem name="ZEN" value="zen"/> 
 			<spinnerItem name="FIOPS" value="fiops"/> 
+			<spinnerItem name="VR" value="vr"/> 
+			<spinnerItem name="FIFO" value="fifo"/> 
+			<spinnerItem name="TRIPNDROID" value="tripndroid"/> 
 		</spinner>
 
 		<spinner description="This will set the DEEPSLEEP I/O scheduler for internal storage. Depends on CortexBrain-Background-Process! (Default equal ZEN)" name="DEEPSLEEP I/O Scheduler" action="generic_cortex /tmp/sleep_scheduler">
 			<spinnerItem name="CFQ" value="cfq"/> 
-			<spinnerItem name="BFQ" value="bfq"/> 
 			<spinnerItem name="DEADLINE" value="deadline"/> 
 			<spinnerItem name="NOOP" value="noop"/> 
 			<spinnerItem name="ROW" value="row"/> 
 			<spinnerItem name="SIO" value="sio"/> 
+			<spinnerItem name="SIOPLUS" value="sioplus"/> 
 			<spinnerItem name="ZEN" value="zen"/> 
 			<spinnerItem name="FIOPS" value="fiops"/> 
+			<spinnerItem name="VR" value="vr"/> 
+			<spinnerItem name="FIFO" value="fifo"/> 
+			<spinnerItem name="TRIPNDROID" value="tripndroid"/> 
 		</spinner>
 
 	</settingsPane>
@@ -717,22 +677,7 @@
 
 <settingsTab name="Tweaks">
 
-	<settingsPane description="Fast Charge control menu - here you can set the force Fast Charge option when MTP is used as USB connection!" name="Fast Charge Control">
-
-		<spinner description="Fast Charge ON or OFF. Also, you can force charge mA limit! For this, select manual and set below the requested limit. If it is set to ON, then default limit is 1200mA. If your charger can't give you 1.2A, don't expect to see 1200mA charge! HOW TO, disconnect Power before any change in this control. change and connect power." name="Force Fast Charge Switch" action="force_fast_charge">
-			<spinnerItem name="Fast Charge OFF" value="0"/> 
-			<spinnerItem name="Fast Charge ON" value="1"/> 
-			<spinnerItem name="Fast Charge Manual" value="2"/> 
-		</spinner>
-
-		<spinner description="Fast Charge Manual mA limit! Here, you can set the max allowed mA limit when using wall charger, out hardware allow max 1600ma BUT some people reported that it's possible to get more than 1600ma. This will take effect ONLY if Fast Charge Manual is set above!" name="Fast Charge mA Limits" action="fast_charge_level">
-			<spinnerItem name="MAX 500mA" value="500"/> 
-			<spinnerItem name="MAX 900mA" value="900"/> 
-			<spinnerItem name="MAX 1200mA" value="1200"/> 
-			<spinnerItem name="MAX 1600mA" value="1600"/> 
-			<spinnerItem name="MAX 1800mA" value="1800"/> 
-			<spinnerItem name="MAX 2000mA" value="2000"/> 
-		</spinner>
+	<settingsPane description="Here you can found Supported Tweaks" name="Reset Battery Fuel Counter">
 
 		<button description="Here you can RESET battery fuel counter, if you see that battery present counter is not showing correct state, you can ask kernel to recalibrate battery state." name="Reset Battery Counter" action="push-actions/reset_battery" label="Reset Battery Counter"/>
 
@@ -753,12 +698,6 @@
 			<spinnerItem name="Protected ADB (default)" value="1"/> 
 			<spinnerItem name="DEV ROOTED ADB" value="0"/> 
 		</spinner>
-
-	</settingsPane>
-
-	<settingsPane description="Sweep2Sleep function control." name="Sweep2Sleep">
-
-		<checkbox description="Enable Sweep2Sleep function that allows to turn screen off by sweeping from right to left or backwards on the bottom of the screen (navigation bar)! If you have removed the soft buttons bar, then you have to turn this function OFF!" name="Sweep2Sleep Control" action="generic01 /sys/sweep2sleep/sweep2sleep" label="Sweep2Sleep"/>
 
 	</settingsPane>
 
@@ -822,18 +761,6 @@
 		<button description="Bug-Report for Kernel" name="Kernel-Bug" action="push-actions/debug_to_sd 1" label="KERNEL-BUG"/>
 
 		<button description="Bug-Report for Apps" name="App-Bug" action="push-actions/debug_to_sd 2" label="APP-BUG"/>
-
-	</settingsPane>
-
-	<settingsPane description="Check if there is a new kernel-update available." name="Kernel-Update">
-
-		<button description="Check for Update" name="Kernel-Update" action="push-actions/kernel_check" label="KERNEL-CHECK"/>
-
-	</settingsPane>
-
-	<settingsPane description="Here you can load (on boot) some kernel modules that will allow some extra functions." name="Kernel Modules">
-
-		<checkbox description="Enable or disable CIFS Module. This will allow you to use apps that can mount internal storage and publish over network. User can access data and system over network. No support! Takes effect only after reboot!" name="CIFS Module" action="generic_cortex /tmp/cifs_module" label="CIFS Module"/>
 
 	</settingsPane>
 
