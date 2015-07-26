@@ -346,15 +346,13 @@
 
 		<seekBar description="Here you can adjust the temperature CPU cores can reach before they are throttled down in order to allow the CPU to cool down and keep the phone at normal temperature." name="CPU Max Heat" action="generic /sys/module/msm_thermal/parameters/limit_temp_degC" unit="°C" min="50" reversed="false" step="1" max="78"/>
 
-<seekBar description="Here you can adjust the temperature to start shutting down Cores." name="CPU Max Heat" action="generic /sys/module/msm_thermal/parameters/core_limit_temp_degC" unit="°C" min="50" reversed="false" step="1" max="100"/>
+<seekBar description="Here you can adjust the temperature to start shutting down Cores." name="CPU Max Heat" action="generic /sys/module/msm_thermal/parameters/core_limit_temp_degC" unit="°C" min="50" reversed="false" step="1" max="78"/>
 
 		<seekBar description="Here you can adjust the Frequency control mask" name="Frequency control mask" action="generic /sys/module/msm_thermal/parameters/freq_control_mask" unit="Step" min="1" reversed="false" step="1" max="100"/>
 
 		<seekBar description="Here you can adjust the Temp Pull Timer interval, lower set force driver to check temp faster and tune max frequency" name="Temp Pull Timer" action="generic /sys/module/msm_thermal/parameters/poll_ms" unit="ms" min="200" reversed="false" step="50" max="500"/>
 
 		<seekBar description="Here you can adjust the Wakeup Timer" name="Wakeup Timer" action="generic /sys/module/msm_thermal/thermal_timer/wakeup_ms" unit="ms" min="0" reversed="false" step="50" max="500"/>
-
-		<seekBar description="Here you can adjust the number of Core that can be Offline" name="core number" action="generic /sys/module/msm_thermal/core_control/cpus_offlined" unit="#" min="0" reversed="false" step="1" max="4"/>
 
 	</settingsPane>
 
@@ -594,22 +592,15 @@
 
 		<button description="Click here to start applications Database Optimization. Compacting, cleaning and indexing will take max 2 minutes." name="DB OPTIMIZATION" action="push-actions/database_optimizing" label="DATABASE OPTIMIZATON"/>
 
-		<button description="Click here to see current SELINUX status! ON or OFF globaly. default is OFF, you can turn it ON with button below." name="SELINUX STATUS CHECK" action="push-actions/selinux_check" label="SELINUX STATUS CHECK"/>
-
-		<button description="Click here to Enable or Disable Selinux Driver in Kernel! if selinux is OFF apps may get access to files in system but not change them, BUT if you have ROOT, they can! with or without selinux. if SELINUX is disabled! (default set on boot) then life is good! and all works! no problems with GSM connection or access permissions with differnt apps. when you push this button ONCE, kernel command line is updated and current kernel is reinstalled by auto!. so dont play with this too much. to see the change you need to REBOOT! then you can check using check button above! WARNING some USER apps loose some or all data! (mostly configurations) as permissions change. do app backup before switching selinux to ENABLE! no problem with DISABLE" name="SELINUX ON OFF CONTROL" action="push-actions/selinux_switch" label="SELINUX HARD ON OFF"/>
-
-		<spinner description="Allows you to change your SELinux (Security-Enhanced Linux) Status from Enforcing (policy is enforced) to Permissive (prints warnings instead of enforcing). ONCE YOU CHANGE TO ENFORCE! THIS CONTROL APP WILL NEVER WORK AGAIN. till you reset profiles by deleting data-.gabriel folder and reboot or run setenforce 0 or use some app to change selinux to permissive. then go here and set Permissive" name="SeLinux Control" action="selinux_control">
-			<spinnerItem name="Enforcing" value="on"/> 
-			<spinnerItem name="Permissive" value="off"/> 
-		</spinner>
-
 	</settingsPane>
 
 	<settingsPane description="Screen Backlight Control, here you can set custom values for Auto backlight driver." name="Min Backlight Control">
 
 		<checkbox description="Enable or Disable custom backlight override set below, this will allow user to set MIN backlight in full darkness." name="Min Backlight Override Switch" action="generic01 /sys/module/lm3697/parameters/lm3697_min_backlight" label="Min Backlight Override Switch"/>
 
-		<seekBar description="If custom backlight switch is ON above!, you can set the MIN backlight in dark place, if you feel that screen is too bright! or too dark! in order for change to take effect you need to make the screen brighter then set auto, and see that it's will be darker or brighter than was on default. you can see live change only if current LUX is under 60! (Default MIN ROM value equal 60 and its just 3 persent backlight)" name="Min Backlight Level" action="generic /sys/module/lm3697/parameters/lm3697_min_backlight" unit="lvl" min="2" reversed="false" step="10" max="1892"/>
+		<seekBar description="If custom backlight switch is ON above!, you can set the MIN backlight in dark place, if you feel that screen is too bright! or too dark! in order for change to take effect you need to make the screen brighter then set auto, and see that it's will be darker or brighter than was on default. you can see live change only if current LUX is under 60! (Default MIN ROM value equal 61 and its just 3 persent backlight)" name="Min Backlight Level" action="generic /sys/module/lm3697/parameters/lm3697_min_backlight" unit="lvl" min="2" reversed="false" step="10" max="1892"/>
+
+		<seekBar description="" name="Max Backlight Level" action="generic /sys/module/lm3697/parameters/lm3697_max_backlight" unit="lvl" min="3" reversed="false" step="10" max="1892"/>
 
 	</settingsPane>
 

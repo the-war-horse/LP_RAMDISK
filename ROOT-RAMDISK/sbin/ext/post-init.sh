@@ -117,6 +117,9 @@ $BB chmod 666 /sys/devices/system/cpu/cpufreq/all_cpus/*
 $BB chmod 666 /sys/devices/system/cpu/cpu1/online
 $BB chmod 666 /sys/devices/system/cpu/cpu2/online
 $BB chmod 666 /sys/devices/system/cpu/cpu3/online
+$BB chmod 666 /sys/module/lm3697/parameters/lm3697_backlight_control
+$BB chmod 666 /sys/module/lm3697/parameters/lm3697_max_backlight
+$BB chmod 666 /sys/module/lm3697/parameters/lm3697_min_backlight
 $BB chmod 666 /sys/module/msm_thermal/parameters/*
 $BB chmod 666 /sys/kernel/intelli_plug/*
 $BB chmod 666 /sys/class/kgsl/kgsl-3d0/max_gpuclk
