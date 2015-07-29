@@ -200,7 +200,7 @@ echo fiops | tee /sys/block/mmcblk0/queue/scheduler
 echo fiops | tee /sys/block/mmcblk1/queue/scheduler
 
 # Set cpu max speed
-echo 1958400 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit
+echo 2265600 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
