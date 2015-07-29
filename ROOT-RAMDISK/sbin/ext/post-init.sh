@@ -160,40 +160,29 @@ echo 2048 | tee /sys/block/mmcblk1/queue/read_ahead_kb
 # Set minimum clock speed
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 echo 300000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1
 echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2
 echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
 echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
 
 # Set cpu governor
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 echo ondemand | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
 echo ondemand | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-chmod 444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
 chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
 echo ondemand | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
 chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
 echo ondemand | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-chmod 444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
 
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
 echo ondemand | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
 echo ondemand | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
 echo ondemand | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
 
 # Set i/o scheduler
 echo fiops | tee /sys/block/mmcblk0/queue/scheduler
@@ -203,26 +192,19 @@ echo fiops | tee /sys/block/mmcblk1/queue/scheduler
 echo 2265600 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
 echo 1728000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
 chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
 echo 1728000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
 chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
 echo 2265600 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
 
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
 echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
 echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
 chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
 echo 2265600 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
-chmod 444 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
 
 # Tweak ondemand governor settings
 echo 30 | tee /sys/devices/system/cpu/cpufreq/ondemand/down_differential
