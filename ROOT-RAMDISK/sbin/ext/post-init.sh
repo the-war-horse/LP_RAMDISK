@@ -97,7 +97,7 @@ echo 1 > /sys/kernel/msm_mpdecision/conf/min_cpus
 echo 1 > /sys/module/msm_hotplug/io_is_busy
 
 # Set voltage levels
-echo 745 745 745 745 755 765 775 795 805 835 845 870 915 975 1010 | tee /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
+echo 730 730 730 730 740 750 760 780 790 820 830 855 900 960 995 | tee /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
 
 # Msc cpu tweaks
 echo 0 | tee /sys/devices/system/cpu/sched_mc_power_savings
