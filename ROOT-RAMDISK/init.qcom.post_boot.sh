@@ -255,14 +255,14 @@ case "$target" in
         echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
-        # echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu0/retention/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu1/retention/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu2/retention/idle_enabled
@@ -295,38 +295,38 @@ case "$target" in
                 do
                     echo "cpubw_hwmon" > $devfreq_gov
                 done
-                echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-                echo "interactive" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-                echo "interactive" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-                echo "interactive" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+                echo "nightmare" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+                echo "nightmare" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+                echo "nightmare" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+                echo "nightmare" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
                 #echo "20000 1400000:40000 1700000:20000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
-                echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-                echo 1190400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
-                echo 1 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+                #echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+                #echo 1190400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+                #echo 1 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
                 #echo "85 1500000:90 1800000:70" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
-                echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
-                echo 20 > /sys/module/cpu_boost/parameters/boost_ms
+                #echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+                #echo 20 > /sys/module/cpu_boost/parameters/boost_ms
                 #echo 1728000 > /sys/module/cpu_boost/parameters/sync_threshold
                 #echo 100000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
-                echo 1497600 > /sys/module/cpu_boost/parameters/input_boost_freq
-                echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
+                #echo 1497600 > /sys/module/cpu_boost/parameters/input_boost_freq
+                #echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
 
                 #Set LGE Interactive-Grid parameters for G3 models
-                echo "20000 1100000:40000 1500000:20000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
-                echo "85 1500000:90" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
-                echo 960000 > /sys/module/cpu_boost/parameters/sync_threshold
-                echo 0 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
+                #echo "20000 1100000:40000 1500000:20000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+                #echo "85 1500000:90" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+                #echo 960000 > /sys/module/cpu_boost/parameters/sync_threshold
+                #echo 0 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
 
-                echo 1 > /sys/devices/system/cpu/cpufreq/interactive/is_grid
-                echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/above_optimal_max_freq_delay
-                echo 960000 > /sys/devices/system/cpu/cpufreq/interactive/optimal_max_freq
-                echo 7 > /sys/devices/system/cpu/cpufreq/interactive/middle_grid_step
-                echo 37 > /sys/devices/system/cpu/cpufreq/interactive/middle_grid_load
-                echo 14 > /sys/devices/system/cpu/cpufreq/interactive/high_grid_step
-                echo 46 > /sys/devices/system/cpu/cpufreq/interactive/high_grid_load
-                echo 1000 > /sys/class/devfreq/g3-display.0/polling_interval
+                #echo 1 > /sys/devices/system/cpu/cpufreq/interactive/is_grid
+                #echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/above_optimal_max_freq_delay
+                #echo 960000 > /sys/devices/system/cpu/cpufreq/interactive/optimal_max_freq
+                #echo 7 > /sys/devices/system/cpu/cpufreq/interactive/middle_grid_step
+                #echo 37 > /sys/devices/system/cpu/cpufreq/interactive/middle_grid_load
+                #echo 14 > /sys/devices/system/cpu/cpufreq/interactive/high_grid_step
+                #echo 46 > /sys/devices/system/cpu/cpufreq/interactive/high_grid_load
+                #echo 1000 > /sys/class/devfreq/g3-display.0/polling_interval
 
-                setprop ro.qualcomm.perf.cores_online 2
+                #setprop ro.qualcomm.perf.cores_online 2
             ;;
             *)
                 echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
