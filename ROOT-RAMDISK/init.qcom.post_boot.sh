@@ -255,14 +255,14 @@ case "$target" in
         echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+        echo 0 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu0/retention/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu1/retention/idle_enabled
         echo 0 > /sys/module/msm_pm/modes/cpu2/retention/idle_enabled
