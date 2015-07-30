@@ -336,7 +336,7 @@ echo 1 > /sys/module/msm_hotplug/io_is_busy
 echo 730 730 730 730 740 750 760 780 790 820 830 855 900 960 995 | tee /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
 
 # Msc cpu tweaks
-echo 0 | tee /sys/devices/system/cpu/sched_mc_power_savings
+echo Y > /sys/devices/system/cpu/sched_mc_power_savings
 echo 1 | tee /sys/kernel/power_suspend/power_suspend_mode
 
 # Set zram size
