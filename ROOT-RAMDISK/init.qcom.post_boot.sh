@@ -296,13 +296,182 @@ case "$target" in
                     echo "cpubw_hwmon" > $devfreq_gov
                 done
         esac
-        echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+        echo 462400000 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/max_gpuclk
+        echo 462400000 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/max_freq
+        echo 10 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/polling_interval
+        echo msm-adreno-tz | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor
+        echo 1 | tee /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate
+        echo 4000 | tee /sys/module/simple_gpu_algorithm/parameters/simple_ramp_threshold
+        echo 6 | tee /sys/module/simple_gpu_algorithm/parameters/simple_laziness
+
+        # set cpu boost settings
+        echo 0 | tee /sys/module/cpu_boost/parameters/boost_ms
+        echo 0 | tee /sys/module/cpu_boost/parameters/input_boost_ms
+        echo 1036800 | tee /sys/module/cpu_boost/parameters/sync_threshold
+        echo 1036800 | tee /sys/module/cpu_boost/parameters/input_boost_freq
+
+        # Set screen levels
+        echo 250 252 256 | tee /sys/devices/platform/kcal_ctrl.0/kcal
+        echo 1 | tee /sys/devices/platform/kcal_ctrl.0/kcal_enable
+        echo 248 | tee /sys/devices/platform/kcal_ctrl.0/kcal_val
+        echo 253 | tee /sys/devices/platform/kcal_ctrl.0/kcal_cont
+
+        # Set voltage levels
+        echo 730 730 730 730 740 750 760 780 790 820 830 855 900 960 995 | tee /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
+
+        # Set zram size
+        swapoff /dev/block/zram0
+        echo 1 > /sys/block/zram0/reset
+        echo 314572800 | tee /sys/block/zram0/disksize
+        mkswap /dev/block/zram0
+        swapon /dev/block/zram0
+
+        # Tweak memory settings
+        echo 1053696 | tee /proc/sys/fs/nr_open
+        echo 32000 | tee /proc/sys/fs/inotify/max_queued_events
+        echo 256 | tee /proc/sys/fs/inotify/max_user_instances
+        echo 10240 | tee /proc/sys/fs/inotify/max_user_watches
+        echo 10 | tee /proc/sys/fs/lease-break-time
+        echo 165164 | tee /proc/sys/fs/file-max
+        echo 525810 | tee /proc/sys/kernel/threads-max
+        echo 256 | tee /proc/sys/kernel/random/write_wakeup_threshold
+        echo 128 | tee /proc/sys/kernel/random/read_wakeup_threshold
+        echo 1 | tee /proc/sys/kernel/sched_compat_yield
+        echo 5 | tee /proc/sys/kernel/panic
+        echo 1 | tee /proc/sys/kernel/panic_on_oops
+        echo 2048 | tee /proc/sys/kernel/msgmni
+        echo 64000 | tee /proc/sys/kernel/msgmax
+        echo 4096 | tee /proc/sys/kernel/shmmni
+        echo 2097152 | tee /proc/sys/kernel/shmall
+        echo 268435456 | tee /proc/sys/kernel/shmmax
+        echo 500 512000 64 2048 | tee /proc/sys/kernel/sem
+        echo 24189 | tee /proc/sys/kernel/sched_features
+        echo 30 | tee /proc/sys/kernel/hung_task_timeout_secs
+        echo 18000000 | tee /proc/sys/kernel/sched_latency_ns
+        echo 1500000 | tee /proc/sys/kernel/sched_min_granularity_ns
+        echo 3000000 | tee /proc/sys/kernel/sched_wakeup_granularity_ns
+        echo 256000 | tee /proc/sys/kernel/sched_shares_ratelimit
+        echo 0 | tee /proc/sys/kernel/sched_child_runs_first
+        echo 90 | tee /proc/sys/vm/dirty_ratio
+        echo 80 | tee /proc/sys/vm/dirty_background_ratio
+        echo 1 | tee /proc/sys/vm/oom_kill_allocating_task
+        echo 1 | tee /proc/sys/vm/overcommit_memory
+        echo 3 | tee /proc/sys/vm/page-cluster
+        echo 3 | tee /proc/sys/vm/drop_caches
+        echo 4096 | tee /proc/sys/vm/min_free_kbytes
+        echo 0 | tee /proc/sys/vm/panic_on_oom
+        echo 1000 | tee /proc/sys/vm/dirty_expire_centisecs
+        echo 2000 | tee /proc/sys/vm/dirty_writeback_centisecs
+        echo 60 | tee /proc/sys/vm/swappiness
+        echo 10 | tee /proc/sys/vm/vfs_cache_pressure
+        echo 4 | tee /proc/sys/vm/min_free_order_shift
+        echo 0 | tee /proc/sys/vm/laptop_mode
+        echo 0 | tee /proc/sys/vm/block_dump
+        echo 4096,8192,16384,32768,49152,65536 | tee /sys/module/lowmemorykiller/parameters/minfree
+
+        # Set hotplug and thermal settings
+        echo 0 > /sys/module/intelli_plug/parameters/intelli_plug_active
+        echo 0 | tee /sys/kernel/msm_mpdecision/conf/enabled
+        echo 0 | tee /sys/module/msm_thermal/vdd_restriction/enabled
+        echo Y | tee /sys/module/msm_thermal/parameters/enabled
+        echo 0 | tee /sys/module/msm_thermal/core_control/enabled
+        echo 1 | tee /sys/module/intelli_plug/parameters/touch_boost_active
+        echo 12 | tee /sys/module/intelli_plug/parameters/nr_run_hysteresis
+        echo 300000 | tee /sys/module/intelli_plug/parameters/screen_off_max
+        stop mpdecision
+        echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_enable
+        echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_suspend
+                echo 1 > /sys/module/msm_hotplug/msm_enabled
+        echo 1 > /sys/module/msm_hotplug/min_cpus_online
+        echo 1 > /sys/kernel/msm_mpdecision/conf/min_cpus
+        echo 1 > /sys/module/msm_hotplug/io_is_busy
+
+        # Msc cpu tweaks
+        echo Y > /sys/devices/system/cpu/sched_mc_power_savings
+        echo 1 | tee /sys/kernel/power_suspend/power_suspend_mode
+
+        # Set read ahead
+        echo 2048 | tee /sys/block/mmcblk0/queue/read_ahead_kb
+        echo 2048 | tee /sys/block/mmcblk1/queue/read_ahead_kb
+
+        # Set minimum clock speed
+        echo 300000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq_kt
+        echo 300000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq_kt
+        echo 300000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq_kt
+        echo 300000 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq_kt
+        echo 300000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 300000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+        echo 300000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        echo 300000 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+
+        # Set cpu governor
+        echo "nightmare" | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo "nightmare" | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+        echo "nightmare" | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+        echo "nightmare" | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+
+        echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_all_cpus
+        echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
+        echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
+        echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
+
+        # Set i/o scheduler
+        echo "fiops" | tee /sys/block/mmcblk0/queue/scheduler
+        echo "fiops" | tee /sys/block/mmcblk1/queue/scheduler
+
+        # Set cpu max speed
+        echo 1728000 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu0
+        echo 1728000 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu1
+        echo 1728000 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu2
+        echo 2265600 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu3
+
+        echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq_kt
+        echo 1728000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq_kt
+        echo 1728000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq_kt
+        echo 2265600 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq_kt
+        echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+        echo 1728000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+        echo 1728000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+        echo 2265600 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+
+        echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
+        echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
+        echo 2265600 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
+
+        # Tweak nightmare settings
+        echo 60 | tee /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
+        echo 1267200 | tee  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
+        echo 1574400 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
+        echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step
+        echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
+        echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
+        echo 5 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
+        echo 50 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
+        echo 60 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
+        echo 90 | tee /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
+        echo 60 | tee /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
+        echo 1 | tee /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
+        echo 50000 | tee /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
+
+        # Tweak ondemand governor settings
+        #echo 30 | tee /sys/devices/system/cpu/cpufreq/ondemand/down_differential
+        #echo 30 | tee /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
+        #echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/high_grid_load
+        #echo 5 | tee /sys/devices/system/cpu/cpufreq/ondemand/high_grid_step
+        #echo 1 | tee /sys/devices/system/cpu/cpufreq/ondemand/ignor_nice_load
+        #echo 85 | tee /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_load
+        #echo 10 | tee /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_step
+        #echo 1267200 | tee /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
+        #echo 1574400 | tee /sys/devices/system/cpu/cpufreq/ondemand/optimal_max_freq
+        #echo 2 | tee /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+        #echo 100000 | tee /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+        #echo 1190400 | tee /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
+        #echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+        #echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
+        #echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
+
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        echo 0 > /sys/module/msm_thermal/core_control/enabled
         chown -h root.system /sys/devices/system/cpu/mfreq
         chmod -h 220 /sys/devices/system/cpu/mfreq
         chown -h root.system /sys/devices/system/cpu/cpu1/online
@@ -311,216 +480,7 @@ case "$target" in
         chmod -h 664 /sys/devices/system/cpu/cpu1/online
         chmod -h 664 /sys/devices/system/cpu/cpu2/online
         chmod -h 664 /sys/devices/system/cpu/cpu3/online
-        echo 1 > /dev/cpuctl/apps/cpu.notify_on_migrate
-        echo 462400000 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/max_gpuclk
-echo 462400000 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/max_freq
-echo 10 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/polling_interval
-echo msm-adreno-tz | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor
-echo 1 | tee /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate
-echo 4000 | tee /sys/module/simple_gpu_algorithm/parameters/simple_ramp_threshold
-echo 6 | tee /sys/module/simple_gpu_algorithm/parameters/simple_laziness
-
-# set cpu boost settings
-echo 0 | tee /sys/module/cpu_boost/parameters/boost_ms
-echo 0 | tee /sys/module/cpu_boost/parameters/input_boost_ms
-echo 1036800 | tee /sys/module/cpu_boost/parameters/sync_threshold
-echo 1036800 | tee /sys/module/cpu_boost/parameters/input_boost_freq
-
-# Set screen levels
-echo 250 252 256 | tee /sys/devices/platform/kcal_ctrl.0/kcal
-echo 1 | tee /sys/devices/platform/kcal_ctrl.0/kcal_enable
-echo 248 | tee /sys/devices/platform/kcal_ctrl.0/kcal_val
-echo 253 | tee /sys/devices/platform/kcal_ctrl.0/kcal_cont
-
-# Set voltage levels
-echo 730 730 730 730 740 750 760 780 790 820 830 855 900 960 995 | tee /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
-
-# Set zram size
-swapoff /dev/block/zram0
-echo 1 > /sys/block/zram0/reset
-echo 314572800 | tee /sys/block/zram0/disksize
-mkswap /dev/block/zram0
-swapon /dev/block/zram0
-
-# Tweak memory settings
-echo 1053696 | tee /proc/sys/fs/nr_open
-echo 32000 | tee /proc/sys/fs/inotify/max_queued_events
-echo 256 | tee /proc/sys/fs/inotify/max_user_instances
-echo 10240 | tee /proc/sys/fs/inotify/max_user_watches
-echo 10 | tee /proc/sys/fs/lease-break-time
-echo 165164 | tee /proc/sys/fs/file-max
-echo 525810 | tee /proc/sys/kernel/threads-max
-echo 256 | tee /proc/sys/kernel/random/write_wakeup_threshold
-echo 128 | tee /proc/sys/kernel/random/read_wakeup_threshold
-echo 1 | tee /proc/sys/kernel/sched_compat_yield
-echo 5 | tee /proc/sys/kernel/panic
-echo 1 | tee /proc/sys/kernel/panic_on_oops
-echo 2048 | tee /proc/sys/kernel/msgmni
-echo 64000 | tee /proc/sys/kernel/msgmax
-echo 4096 | tee /proc/sys/kernel/shmmni
-echo 2097152 | tee /proc/sys/kernel/shmall
-echo 268435456 | tee /proc/sys/kernel/shmmax
-echo 500 512000 64 2048 | tee /proc/sys/kernel/sem
-echo 24189 | tee /proc/sys/kernel/sched_features
-echo 30 | tee /proc/sys/kernel/hung_task_timeout_secs
-echo 18000000 | tee /proc/sys/kernel/sched_latency_ns
-echo 1500000 | tee /proc/sys/kernel/sched_min_granularity_ns
-echo 3000000 | tee /proc/sys/kernel/sched_wakeup_granularity_ns
-echo 256000 | tee /proc/sys/kernel/sched_shares_ratelimit
-echo 0 | tee /proc/sys/kernel/sched_child_runs_first
-echo 90 | tee /proc/sys/vm/dirty_ratio
-echo 80 | tee /proc/sys/vm/dirty_background_ratio
-echo 1 | tee /proc/sys/vm/oom_kill_allocating_task
-echo 1 | tee /proc/sys/vm/overcommit_memory
-echo 3 | tee /proc/sys/vm/page-cluster
-echo 3 | tee /proc/sys/vm/drop_caches
-echo 4096 | tee /proc/sys/vm/min_free_kbytes
-echo 0 | tee /proc/sys/vm/panic_on_oom
-echo 1000 | tee /proc/sys/vm/dirty_expire_centisecs
-echo 2000 | tee /proc/sys/vm/dirty_writeback_centisecs
-echo 60 | tee /proc/sys/vm/swappiness
-echo 10 | tee /proc/sys/vm/vfs_cache_pressure
-echo 4 | tee /proc/sys/vm/min_free_order_shift
-echo 0 | tee /proc/sys/vm/laptop_mode
-echo 0 | tee /proc/sys/vm/block_dump
-echo 4096,8192,16384,32768,49152,65536 | tee /sys/module/lowmemorykiller/parameters/minfree
-
-# Set hotplug and thermal settings
-echo 0 > /sys/module/intelli_plug/parameters/intelli_plug_active
-echo 0 | tee /sys/kernel/msm_mpdecision/conf/enabled
-echo 0 | tee /sys/module/msm_thermal/vdd_restriction/enabled
-echo Y | tee /sys/module/msm_thermal/parameters/enabled
-echo 0 | tee /sys/module/msm_thermal/core_control/enabled
-echo 1 | tee /sys/module/intelli_plug/parameters/touch_boost_active
-echo 12 | tee /sys/module/intelli_plug/parameters/nr_run_hysteresis
-echo 300000 | tee /sys/module/intelli_plug/parameters/screen_off_max
-stop mpdecision
-echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_enable
-echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_suspend
-echo 1 > /sys/module/msm_hotplug/msm_enabled
-echo 1 > /sys/module/msm_hotplug/min_cpus_online
-echo 1 > /sys/kernel/msm_mpdecision/conf/min_cpus
-echo 1 > /sys/module/msm_hotplug/io_is_busy
-
-# Msc cpu tweaks
-echo Y > /sys/devices/system/cpu/sched_mc_power_savings
-echo 1 | tee /sys/kernel/power_suspend/power_suspend_mode
-
-# Set read ahead
-echo 2048 | tee /sys/block/mmcblk0/queue/read_ahead_kb
-echo 2048 | tee /sys/block/mmcblk1/queue/read_ahead_kb
-
-# Set minimum clock speed
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq_kt
-echo 300000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq_kt
-echo 300000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq_kt
-echo 300000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq_kt
-echo 300000 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 300000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-echo 300000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-chmod 444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-echo 300000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-echo 300000 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-chmod 444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-
-echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1
-echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2
-echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
-
-# Set cpu governor
-echo "nightmare" | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo "nightmare" | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-echo "nightmare" | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-echo "nightmare" | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-
-echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_all_cpus
-echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
-echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
-echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
-
-# Set i/o scheduler
-echo "fiops" | tee /sys/block/mmcblk0/queue/scheduler
-echo "fiops" | tee /sys/block/mmcblk1/queue/scheduler
-
-# Set cpu max speed
-echo 1728000 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu0
-echo 1728000 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu1
-echo 1728000 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu2
-echo 2265600 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu3
-
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq_kt
-echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq_kt
-echo 1728000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq_kt
-echo 1728000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq_kt
-echo 2265600 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq_kt
-chmod 444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq_kt
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-echo 1728000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-echo 1728000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-echo 2265600 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-chmod 444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-
-echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
-echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
-echo 2265600 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
-
-# Tweak nightmare settings
-echo 60 | tee /sys/devices/system/cpu/cpufreq/nightmare/dec_cpu_load
-echo 1267200 | tee  /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness
-echo 1574400 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_for_responsiveness_max 
-echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step
-echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_at_min_freq
-echo 10 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec 
-echo 5 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_step_dec_at_max_freq 
-echo 50 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake 
-echo 60 | tee /sys/devices/system/cpu/cpufreq/nightmare/freq_up_brake_at_min_freq
-echo 90 | tee /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load
-echo 60 | tee /sys/devices/system/cpu/cpufreq/nightmare/inc_cpu_load_at_min_freq
-echo 1 | tee /sys/devices/system/cpu/cpufreq/nightmare/io_is_busy
-echo 50000 | tee /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
-
-# Tweak ondemand governor settings
-#echo 30 | tee /sys/devices/system/cpu/cpufreq/ondemand/down_differential
-#echo 30 | tee /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
-#echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/high_grid_load
-#echo 5 | tee /sys/devices/system/cpu/cpufreq/ondemand/high_grid_step
-#echo 1 | tee /sys/devices/system/cpu/cpufreq/ondemand/ignor_nice_load
-#echo 85 | tee /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_load
-#echo 10 | tee /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_step
-#echo 1267200 | tee /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
-#echo 1574400 | tee /sys/devices/system/cpu/cpufreq/ondemand/optimal_max_freq
-#echo 2 | tee /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-#echo 100000 | tee /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-#echo 1190400 | tee /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
-#echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-#echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
-#echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
+        echo 1 > /dev/cpuctl/apps/cpu.notify_on_migrate        
     ;;
 esac
 
