@@ -315,29 +315,8 @@ echo 1 | tee /sys/devices/platform/kcal_ctrl.0/kcal_enable
 echo 248 | tee /sys/devices/platform/kcal_ctrl.0/kcal_val
 echo 253 | tee /sys/devices/platform/kcal_ctrl.0/kcal_cont
 
-# Set hotplug and thermal settings
-echo 0 > /sys/module/intelli_plug/parameters/intelli_plug_active
-echo 0 | tee /sys/kernel/msm_mpdecision/conf/enabled
-echo 0 | tee /sys/module/msm_thermal/vdd_restriction/enabled
-echo Y | tee /sys/module/msm_thermal/parameters/enabled
-echo 0 | tee /sys/module/msm_thermal/core_control/enabled
-echo 1 | tee /sys/module/intelli_plug/parameters/touch_boost_active
-echo 12 | tee /sys/module/intelli_plug/parameters/nr_run_hysteresis
-echo 300000 | tee /sys/module/intelli_plug/parameters/screen_off_max
-stop mpdecision
-echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_enable
-echo 0 | tee /sys/kernel/alucard_hotplug/hotplug_suspend
-echo 1 > /sys/module/msm_hotplug/msm_enabled
-echo 1 > /sys/module/msm_hotplug/min_cpus_online
-echo 1 > /sys/kernel/msm_mpdecision/conf/min_cpus
-echo 1 > /sys/module/msm_hotplug/io_is_busy
-
 # Set voltage levels
 echo 730 730 730 730 740 750 760 780 790 820 830 855 900 960 995 | tee /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table
-
-# Msc cpu tweaks
-echo Y > /sys/devices/system/cpu/sched_mc_power_savings
-echo 1 | tee /sys/kernel/power_suspend/power_suspend_mode
 
 # Set zram size
 swapoff /dev/block/zram0
@@ -388,76 +367,6 @@ echo 4 | tee /proc/sys/vm/min_free_order_shift
 echo 0 | tee /proc/sys/vm/laptop_mode
 echo 0 | tee /proc/sys/vm/block_dump
 echo 4096,8192,16384,32768,49152,65536 | tee /sys/module/lowmemorykiller/parameters/minfree
-
-# Set read ahead
-echo 2048 | tee /sys/block/mmcblk0/queue/read_ahead_kb
-echo 2048 | tee /sys/block/mmcblk1/queue/read_ahead_kb
-
-# Set minimum clock speed
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 300000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1
-echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2
-echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
-echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
-
-# Set cpu governor
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo ondemand | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-echo ondemand | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-echo ondemand | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-echo ondemand | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
-echo ondemand | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
-echo ondemand | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
-echo ondemand | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
-
-# Set i/o scheduler
-echo fiops | tee /sys/block/mmcblk0/queue/scheduler
-echo fiops | tee /sys/block/mmcblk1/queue/scheduler
-
-# Set cpu max speed
-echo 2265600 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-echo 1728000 | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-echo 1728000 | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-echo 1728000 | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-echo 2265600 | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
-echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
-echo 1728000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
-echo 2265600 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3
-
-# Tweak ondemand governor settings
-echo 30 | tee /sys/devices/system/cpu/cpufreq/ondemand/down_differential
-echo 30 | tee /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
-echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/high_grid_load
-echo 5 | tee /sys/devices/system/cpu/cpufreq/ondemand/high_grid_step
-echo 1 | tee /sys/devices/system/cpu/cpufreq/ondemand/ignor_nice_load
-echo 85 | tee /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_load
-echo 10 | tee /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_step
-echo 1267200 | tee /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
-echo 1574400 | tee /sys/devices/system/cpu/cpufreq/ondemand/optimal_max_freq
-echo 2 | tee /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-echo 100000 | tee /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-echo 1190400 | tee /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
-echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
-echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
 
             ;;
             *)
