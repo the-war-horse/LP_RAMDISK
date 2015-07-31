@@ -295,7 +295,24 @@ case "$target" in
                 do
                     echo "cpubw_hwmon" > $devfreq_gov
                 done
-                echo 462400000 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/max_gpuclk
+        esac
+        echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+        echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+        chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+        chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 0 > /sys/module/msm_thermal/core_control/enabled
+        chown -h root.system /sys/devices/system/cpu/mfreq
+        chmod -h 220 /sys/devices/system/cpu/mfreq
+        chown -h root.system /sys/devices/system/cpu/cpu1/online
+        chown -h root.system /sys/devices/system/cpu/cpu2/online
+        chown -h root.system /sys/devices/system/cpu/cpu3/online
+        chmod -h 664 /sys/devices/system/cpu/cpu1/online
+        chmod -h 664 /sys/devices/system/cpu/cpu2/online
+        chmod -h 664 /sys/devices/system/cpu/cpu3/online
+        echo 1 > /dev/cpuctl/apps/cpu.notify_on_migrate
+        echo 462400000 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/max_gpuclk
 echo 462400000 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/max_freq
 echo 10 | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/polling_interval
 echo msm-adreno-tz | tee /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor
@@ -424,25 +441,19 @@ echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2
 echo 300000 | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3
 
 # Set cpu governor
-chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo nightmare | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-chmod 644 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-echo nightmare | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-echo nightmare | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-chmod 644 /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-echo nightmare | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+echo "nightmare" | tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "nightmare" | tee /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "nightmare" | tee /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+echo "nightmare" | tee /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
 
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
-echo nightmare | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
-echo nightmare | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
-chmod 644 /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
-echo nightmare | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
+echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_all_cpus
+echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1
+echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2
+echo "nightmare" | tee /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3
 
 # Set i/o scheduler
-echo fiops | tee /sys/block/mmcblk0/queue/scheduler
-echo fiops | tee /sys/block/mmcblk1/queue/scheduler
+echo "fiops" | tee /sys/block/mmcblk0/queue/scheduler
+echo "fiops" | tee /sys/block/mmcblk1/queue/scheduler
 
 # Set cpu max speed
 echo 1728000 | tee /sys/kernel/msm_cpufreq_limit/cpufreq_limit_cpu0
@@ -510,42 +521,6 @@ echo 50000 | tee /sys/devices/system/cpu/cpufreq/nightmare/sampling_rate
 #echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
 #echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
 #echo 95 | tee /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
-
-            ;;
-            *)
-                echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-                echo "ondemand" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-                echo "ondemand" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-                echo "ondemand" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
-                echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-                echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-                echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
-                echo 2 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-                echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential
-                echo 70 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core
-                echo 3 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
-                echo 960000 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
-                echo 960000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
-                echo 1190400 > /sys/devices/system/cpu/cpufreq/ondemand/input_boost
-                echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
-            ;;
-        esac
-        echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-        echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-        chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-        chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        echo 1 > /sys/module/msm_thermal/core_control/enabled
-        chown -h root.system /sys/devices/system/cpu/mfreq
-        chmod -h 220 /sys/devices/system/cpu/mfreq
-        chown -h root.system /sys/devices/system/cpu/cpu1/online
-        chown -h root.system /sys/devices/system/cpu/cpu2/online
-        chown -h root.system /sys/devices/system/cpu/cpu3/online
-        chmod -h 664 /sys/devices/system/cpu/cpu1/online
-        chmod -h 664 /sys/devices/system/cpu/cpu2/online
-        chmod -h 664 /sys/devices/system/cpu/cpu3/online
-        echo 1 > /dev/cpuctl/apps/cpu.notify_on_migrate
     ;;
 esac
 
